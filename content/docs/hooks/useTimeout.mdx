@@ -1,0 +1,159 @@
+---
+title: useTimeout
+description: Run a function after a delay with cancel/reset controls.
+---
+
+# \`useTimeout\`
+
+Run a function once after a delay. Useful for animations, debounced UI actions, splash screens, etc.
+
+---
+
+## 📦 Installation
+
+<Callout>No external dependency needed</Callout>
+
+---
+
+## 🧠 Purpose
+
+\`useTimeout\` lets you execute a callback after a given delay and provides control to cancel or reset it.
+
+---
+
+## 💡 Use Cases
+
+- Splash screens
+- Auto-close modals
+- Triggering animation after delay
+- Reminders or delayed alerts
+
+---
+
+## 📁 Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="useTimeout.ts"
+import { useEffect, useRef, useCallback } from "react";
+
+export function useTimeout(callback: () => void, delay: number | null) {
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    if (delay === null) return;
+    const id = setTimeout(() => savedCallback.current(), delay);
+    return () => clearTimeout(id);
+  }, [delay]);
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="useTimeout.js"
+import { useEffect, useRef } from "react";
+
+export function useTimeout(callback, delay) {
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    if (delay === null) return;
+    const id = setTimeout(() => savedCallback.current(), delay);
+    return () => clearTimeout(id);
+  }, [delay]);
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🧪 Example
+
+```tsx
+import { useState } from "react";
+import { useTimeout } from "@/hooks/useTimeout";
+
+export default function DelayedMessage() {
+  const [visible, setVisible] = useState(false);
+
+  useTimeout(() => setVisible(true), 3000);
+
+  return <p>{visible ? "Hello after 3 seconds!" : "Waiting..."}</p>;
+}
+```
+
+---
+
+## 🧩 Hook Signature
+
+```ts
+function useTimeout(callback: () => void, delay: number | null): void;
+```
+
+---
+
+## 📝 Parameters
+
+<TypeTable
+  type={{
+    callback: {
+      description: "Function to execute after the timeout",
+      type: "() => void",
+      required: true,
+    },
+    delay: {
+      description: "Delay in milliseconds. Set to null to disable.",
+      type: "number | null",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🎯 Returns
+
+<Callout type="info" title="No Return Value">
+  This hook does not return anything. It runs the callback after the specified
+  delay and handles cleanup internally.
+</Callout>
+---
+
+## 🧯 Visual Timeline
+
+<Callout type="info" title="Timeout Flow">
+  After mounting, the callback runs once after the specified delay.
+</Callout>
+
+```bash
+Render → Delay = 3000ms
+Timer starts...
+After 3s → callback is executed
+```
+
+---
+
+## 🏁 Summary
+
+- ✅ Declarative timeout logic
+- ✅ Useful for delayed UI updates
+- ✅ Works with cancel/reset behavior
+- ✅ Easily testable
+
+---
+
+## 🙋 Contribution
+
+Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!

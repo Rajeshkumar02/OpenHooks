@@ -1,0 +1,159 @@
+---
+title: useClipboard
+description: Copy text to clipboard with feedback on success.
+---
+
+# \`useClipboard\`
+
+A React hook to copy text to the clipboard and track whether the copy was successful using a \`copied\` state.
+
+---
+
+## 📦 Installation
+
+<Callout>No external dependency needed</Callout>
+
+---
+
+## 🧠 Purpose
+
+\`useClipboard\` provides a simple API to trigger clipboard copy operations and optionally show feedback like "Copied!" messages.
+
+---
+
+## 💡 Use Cases
+
+- Copy-to-clipboard buttons
+- Invite/share links
+- Quick code snippet sharing
+- Toast notifications on success
+
+---
+
+## 📁 Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="useClipboard.ts"
+import { useState } from "react";
+
+export function useClipboard(): {
+  copy: (text: string) => void;
+  copied: boolean;
+} {
+  const [copied, setCopied] = useState(false);
+
+  const copy = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  return { copy, copied };
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="useClipboard.js"
+import { useState } from "react";
+
+export function useClipboard() {
+  const [copied, setCopied] = useState(false);
+
+  const copy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  return { copy, copied };
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🧪 Example
+
+```tsx
+import { useClipboard } from "@/hooks/useClipboard";
+
+export default function CopyExample() {
+  const { copy, copied } = useClipboard();
+
+  return (
+    <div>
+      <button onClick={() => copy("Hello, world!")}>
+        {copied ? "Copied!" : "Copy Text"}
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## 🧩 Hook Signature
+
+```ts
+function useClipboard(): {
+  copy: (text: string) => void;
+  copied: boolean;
+};
+```
+
+---
+
+## 📝 Parameters
+
+<Callout type="info" title="No Initial Parameters">
+  This hook has no parameters.
+</Callout>
+
+---
+
+## 🎯 Returns
+
+<TypeTable
+  type={{
+    copy: {
+      description: "Function to copy the provided string to clipboard",
+      type: "(text: string) => void",
+      required: true,
+    },
+    copied: {
+      description: "Boolean value indicating if copy was successful recently",
+      type: "boolean",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🧯 Copy Status
+
+<Callout type="info" title="Copied Flag">
+  The \`copied\` value is true for 1.5 seconds after a successful copy.
+</Callout>
+
+---
+
+## 🏁 Summary
+
+- ✅ Modern clipboard API
+- ✅ Visual feedback support
+- ✅ Useful for share/copy interactions
+
+---
+
+## 🙋 Contribution
+
+Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!

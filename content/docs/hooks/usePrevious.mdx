@@ -1,0 +1,156 @@
+---
+title: usePrevious
+description: Track and return the previous value of a state or prop in React.
+---
+
+# \`usePrevious\`
+
+A React hook that returns the previous value of a given variable. Useful for comparing state/prop changes between renders.
+
+---
+
+## 📦 Installation
+
+<Callout>No external dependency needed</Callout>
+
+---
+
+## 🧠 Purpose
+
+Use \`usePrevious\` to store and retrieve the value of a variable from the previous render cycle.
+
+---
+
+## 💡 Use Cases
+
+- Compare current and previous props or state
+- Detect direction of scrolling or change
+- Trigger logic only when value changes
+
+---
+
+## 📁 Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="usePrevious.ts"
+import { useEffect, useRef } from "react";
+
+export function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>();
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="usePrevious.js"
+import { useEffect, useRef } from "react";
+
+export function usePrevious(value) {
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🧪 Example
+
+```tsx
+import { useState } from "react";
+import { usePrevious } from "@/hooks/usePrevious";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  const prevCount = usePrevious(count);
+
+  return (
+    <div>
+      <p>
+        Now: {count}, Before: {prevCount}
+      </p>
+      <button onClick={() => setCount((c) => c + 1)}>Increment</button>
+    </div>
+  );
+}
+```
+
+---
+
+## 🧩 Hook Signature
+
+```ts
+function usePrevious<T>(value: T): T | undefined;
+```
+
+---
+
+## 📝 Parameters
+
+<TypeTable
+  type={{
+    value: {
+      description: "The value to keep track of",
+      type: "T",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🎯 Returns
+
+<TypeTable
+  type={{
+    previousValue: {
+      description: "The previous value from the last render",
+      type: "T | undefined",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🧯 Visual Timeline
+
+<Callout type="info" title="Render Timeline">
+  Tracks how the value changes and updates on re-render.
+</Callout>
+
+```bash
+Render 1: value = 0, previous = undefined
+Render 2: value = 1, previous = 0
+Render 3: value = 2, previous = 1
+```
+
+---
+
+## 🏁 Summary
+
+- ✅ Keeps track of the previous value across renders
+- ✅ Works with any type (number, string, object, etc.)
+- ✅ Perfect for comparison-based effects
+
+---
+
+## 🙋 Contribution
+
+Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!

@@ -1,0 +1,161 @@
+---
+title: useClickOutside
+description: Detect clicks outside a specific element to trigger a callback.
+---
+
+# \`useClickOutside\`
+
+A React hook that detects when a user clicks outside a specified element and triggers a callback function.
+
+---
+
+## 📦 Installation
+
+<Callout>No external dependency needed</Callout>
+
+---
+
+## 🧠 Purpose
+
+\`useClickOutside\` helps in closing modals, dropdowns, or popovers when clicking outside their container.
+
+---
+
+## 💡 Use Cases
+
+- Dismiss modals
+- Close dropdown menus
+- Collapse sidebar on outside click
+
+---
+
+## 📁 Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="useClickOutside.ts"
+import { useEffect } from "react";
+
+export function useClickOutside(
+  ref: React.RefObject<HTMLElement>,
+  callback: () => void
+) {
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        callback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [ref, callback]);
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="useClickOutside.js"
+import { useEffect } from "react";
+
+export function useClickOutside(ref, callback) {
+  useEffect(() => {
+    function handleClick(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [ref, callback]);
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🧪 Example
+
+```tsx
+import { useRef, useState } from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
+
+export default function Dropdown() {
+  const [open, setOpen] = useState(true);
+  const ref = useRef(null);
+
+  useClickOutside(ref, () => setOpen(false));
+
+  return (
+    <div ref={ref}>
+      {open && <div className="dropdown">Dropdown Content</div>}
+    </div>
+  );
+}
+```
+
+---
+
+## 🧩 Hook Signature
+
+```ts
+function useClickOutside(
+  ref: RefObject<HTMLElement>,
+  callback: () => void
+): void;
+```
+
+---
+
+## 📝 Parameters
+
+<TypeTable
+  type={{
+    ref: {
+      description: "Ref to the target element",
+      type: "RefObject<HTMLElement>",
+      required: true,
+    },
+    callback: {
+      description: "Function to run when click occurs outside the ref",
+      type: "() => void",
+      required: true,
+    },
+  }}
+/>
+
+---
+
+## 🎯 Returns
+
+<Callout type="info" title="No Return Value">
+  This hook only runs a side-effect and does not return any value.
+</Callout>
+
+---
+
+## 🧯 Behavior
+
+<Callout type="info" title="Click Detection">
+  Listens to document clicks and checks if the target is outside the referenced
+  element.
+</Callout>
+
+---
+
+## 🏁 Summary
+
+- ✅ Great for modal/drawer interaction
+- ✅ Handles document clicks efficiently
+- ✅ Simple and useful
+
+---
+
+## 🙋 Contribution
+
+Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!
