@@ -1,9 +1,7 @@
 import {
-  Search,
   Code,
   Layers,
   Zap,
-  ArrowRight,
   Package,
   Sparkles,
   Shield,
