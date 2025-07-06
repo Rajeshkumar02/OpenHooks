@@ -10,7 +10,7 @@ export async function getConfig(): Promise<Config> {
 
     if (!(await fs.pathExists(configPath))) {
       warn(
-        `Configuration not found. Run "hooks-cli ${CLI.COMMANDS.INIT}" first.`
+        `Configuration not found. Run "${CLI.COMMAND_NAME} ${CLI.COMMANDS.INIT}" first.`
       );
       throw new Error("Configuration missing");
     }
@@ -21,6 +21,8 @@ export async function getConfig(): Promise<Config> {
     throw err;
   }
 }
+
+// ... rest of the file
 
 export async function saveConfig(config: Partial<Config>): Promise<void> {
   try {

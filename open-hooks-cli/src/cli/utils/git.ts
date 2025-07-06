@@ -13,7 +13,6 @@ function parseRepoUrl(repoUrl: string): {
   repo: string;
   branch: string;
 } {
-  // Extract owner, repo, and branch from URL
   const match = repoUrl.match(
     /github\.com[/:]([^/]+)\/([^/#]+)(?:\.git)?(?:\/tree\/([^#]+))?/i
   );
@@ -22,9 +21,14 @@ function parseRepoUrl(repoUrl: string): {
     throw new Error(REPO_CONFIG.ERRORS.INVALID_REPO_URL);
   }
 
+  let repo = match[2];
+  if (repo.endsWith(".git")) {
+    repo = repo.slice(0, -4); // ✅ Remove .git suffix if present
+  }
+
   return {
     owner: match[1],
-    repo: match[2],
+    repo,
     branch: match[3] || REPO_CONFIG.DEFAULT_BRANCH,
   };
 }

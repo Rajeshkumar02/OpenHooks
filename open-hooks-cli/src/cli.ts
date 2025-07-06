@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { initCommand } from "./commands/init";
-import { addCommand } from "./commands/add";
-import { listCommand } from "./commands/list";
+import { addCommand } from "./cli/commands/add";
+import { listCommand } from "./cli/commands/list";
+import { initCommand } from "./cli/commands/init";
 
 const program = new Command();
 
 program
-  .name("hooks-cli")
+  .name("open-hooks")
   .description("CLI for managing custom React hooks")
   .version("1.0.0");
 

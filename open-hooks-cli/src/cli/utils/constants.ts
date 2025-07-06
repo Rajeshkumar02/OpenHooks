@@ -2,11 +2,11 @@
 export const REPO_CONFIG = {
   // Default repository information
   DEFAULT_REPO: "Rajeshkumar02/OpenHooks",
-  DEFAULT_BRANCH: "main",
+  DEFAULT_BRANCH: "DEV_INIT_PACKAGE",
 
   // Repository structure paths
   HOOKS_BASE_PATH: "hooks",
-  MANIFEST_PATH: "./manifest.json",
+  MANIFEST_PATH: "hooks/manifest.json",
   JS_HOOKS_DIR: "js",
   TS_HOOKS_DIR: "ts",
 
@@ -30,12 +30,13 @@ export const REPO_CONFIG = {
 export const DEFAULT_CONFIG_VALUES = {
   HOOKS_DIR: "src/hooks",
   DEFAULT_LANGUAGE: "ts" as "ts" | "js",
-  REPO_URL: `https://github.com/${REPO_CONFIG.DEFAULT_REPO}.git`,
+  REPO_URL: `https://github.com/${REPO_CONFIG.DEFAULT_REPO}`,
 };
 
 // CLI constants
 export const CLI = {
-  CONFIG_FILE: "openHooks.config.json",
+  COMMAND_NAME: "open-hooks",
+  CONFIG_FILE: "open-hooks.config.json",
   COMMANDS: {
     INIT: "init",
     ADD: "add",
