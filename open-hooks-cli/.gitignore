@@ -1,0 +1,5 @@
+node_modules/
+dist/
+hooks.config.json
+.DS_Store
+.env
