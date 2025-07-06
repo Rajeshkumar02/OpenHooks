@@ -42,7 +42,7 @@ export async function fetchHookList(repoUrl: string): Promise<HookInfo[]> {
       REPO_CONFIG.MANIFEST_PATH
     );
 
-    info(`Fetching hook list from: ${manifestUrl}`);
+    info(`Fetching hook list...`);
     const response = await axios.get(manifestUrl);
 
     if (response.data?.hooks && Array.isArray(response.data.hooks)) {
@@ -76,7 +76,7 @@ export async function downloadHook(
 
     const downloadUrl = GITHUB_RAW_URL(`${owner}/${repo}`, branch, hookPath);
 
-    info(`Downloading hook from: ${downloadUrl}`);
+    info(`Downloading hook...`);
     const response = await axios.get(downloadUrl, { responseType: "text" });
 
     await fs.ensureDir(path.dirname(filePath));

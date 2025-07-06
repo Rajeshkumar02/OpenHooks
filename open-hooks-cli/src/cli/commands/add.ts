@@ -62,19 +62,8 @@ export async function addCommand(hookName?: string, options: any = {}) {
       return;
     }
 
-    // Determine directory
-    let installDir = options.dir || config.hooksDir;
-    if (!options.dir) {
-      const { dir } = await inquirer.prompt([
-        {
-          type: "input",
-          name: "dir",
-          message: "Installation directory?",
-          default: config.hooksDir,
-        },
-      ]);
-      installDir = dir;
-    }
+    // Use directory from config without prompting
+    const installDir = config.hooksDir;
 
     // Create full file path
     const fileName = `${REPO_CONFIG.HOOK_FILE_PREFIX}${finalHookName}.${language}`;
@@ -84,12 +73,11 @@ export async function addCommand(hookName?: string, options: any = {}) {
     await downloadHook(config.repoUrl, finalHookName!, language, filePath);
 
     success(`Hook added: ${filePath}`);
-    info(
-      `Import with: import ${REPO_CONFIG.HOOK_FILE_PREFIX}${finalHookName} from './${path
-        .relative(process.cwd(), filePath)
-        .replace(/\\/g, "/")}'`
-    );
   } catch (err: any) {
-    error(err instanceof Error ? err.message : "An unknown error occurred");
+    if (err.message === "Configuration missing") {
+      error('No configuration found. Please run "open-hooks init" first.');
+    } else {
+      error(err instanceof Error ? err.message : "An unknown error occurred");
+    }
   }
 }
