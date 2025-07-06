@@ -1,0 +1,31 @@
+{
+  "name": "open-hooks-cli",
+  "version": "1.0.0",
+  "description": "CLI to maintain the openhooks package. Where open hooks is nothing but the larger collection of custom hooks.",
+  "main": "dist/cli/index.js",
+  "bin": {
+    "hooks-cli": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "prepublish": "npm run build"
+  },
+  "author": "Rajeshkumar S",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "chalk": "^5.4.1",
+    "cli-table3": "^0.6.5",
+    "commander": "^14.0.0",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.7.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.8",
+    "@types/node": "^24.0.10",
+    "typescript": "^5.8.3"
+  }
+}

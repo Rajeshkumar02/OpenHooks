@@ -1,0 +1,10 @@
+{
+  "hooks": [
+    {
+      "name": "LocalStorage",
+      "description": "Persistent state hook",
+      "js": true,
+      "ts": true
+    }
+  ]
+}
