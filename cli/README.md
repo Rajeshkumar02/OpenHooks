@@ -34,6 +34,14 @@ npx open-hook add useFetch useLocalStorage --language ts
 
 ---
 
+### 😄 Fun Break
+
+> **💡 open-hook pro tip:**  
+> _"Why did the React dev bring a fishing rod to work?"_  
+> _Because they heard there were **custom hooks** to catch! 🎣_
+
+---
+
 ## ✨ Features
 
 | Feature | Description |

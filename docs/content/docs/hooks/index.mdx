@@ -1,0 +1,136 @@
+---
+title: Hooks
+description: Learn about React hooks and how the open-hook CLI helps manage them with ease.
+---
+
+# 🎣 React Hooks & `open-hook`
+
+## 🧠 What are Hooks in React?
+
+**React Hooks** are built-in functions that let you use state and other React features without writing a class. They make components simpler, more readable, and reusable.
+
+Some common built-in hooks include:
+
+- `useState` — for managing local state
+- `useEffect` — for side effects like data fetching
+- `useRef`, `useMemo`, `useCallback`, and more
+
+Custom hooks let you extract reusable logic into shared utilities — that’s where this project comes in!
+
+---
+
+## 🚀 What is `open-hook`?
+
+**`open-hook`** is a developer-friendly CLI tool that helps you:
+
+- 📦 Install community-contributed reusable React custom hooks
+- 📃 View available hooks with descriptions and support info
+- ⚙️ Initialize project-level configuration
+- 🛠️ Choose JavaScript or TypeScript output
+- 🔄 Avoid rewriting the same logic again and again!
+
+Hooks are fetched directly from a centralized GitHub repo and installed locally into your project’s `hooks` folder.
+
+---
+
+## 💡 Advantages of Using `open-hook`
+
+| 🔧 Feature             | 🚀 Benefit                                                              |
+| ---------------------- | ----------------------------------------------------------------------- |
+| 🪝 Custom Hook Library | Ready-to-use hooks for common tasks (debouncing, storage, events, etc.) |
+| ⚙️ Configurable        | Set default language, folder, and hook preferences                      |
+| 📥 CLI Install         | Install hooks in seconds — without Googling or copy-pasting from blogs  |
+| 🌍 Community Driven    | Contribute your own hooks or improve existing ones                      |
+| 🔒 Safe & Isolated     | No external package bloat — pure functions, typed and clean             |
+
+---
+
+## 📦 Installation
+
+Install the CLI globally using your preferred package manager:
+
+<Tabs groupId="package-manager" items={["npm", "pnpm"]}>
+  <Tab value="npm" >
+
+```bash
+npm install -g open-hook
+```
+
+  </Tab>
+  <Tab value="pnpm" >
+
+```bash
+pnpm add -g open-hook
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🔧 Quick Start
+
+Get up and running with **open-hook** in just a few steps! This CLI tool helps you fetch and manage reusable React hooks from a centralized repository.
+
+---
+
+### 🛠 Step 1: Initialize Your Project Configuration
+
+```bash
+open-hook init
+```
+
+This command creates a config file (`open-hooks.config.json`) in your project root. You'll be prompted to set:
+
+- 📁 **Hook Directory** – Where downloaded hooks will be saved (e.g., `src/hooks`)
+- 🧠 **Default Language** – Choose between `TypeScript` or `JavaScript`
+- 🌐 **Repository URL** – The GitHub repo from which to fetch hooks (default provided)
+
+---
+
+### 📥 Step 2: Add Hooks to Your Project
+
+```bash
+open-hook add
+```
+
+This command lets you:
+
+- 🔍 Interactively **browse all available hooks**
+- ⌨️ Or install hooks directly by name:
+  ```bash
+  open-hook add Debounce Clipboard --language ts
+  ```
+
+If a hook already exists in your project, you'll get smart options:
+
+- Replace the existing file
+- Skip it
+- Cancel the entire process
+
+---
+
+### 📃 Step 3: List All Available Hooks
+
+```bash
+open-hook list
+```
+
+Displays a clean, tabular list of all hooks available in the repository along with:
+
+- ✅ Language availability (JS/TS)
+- 📝 Short description
+- 📦 Hook names
+
+---
+
+✨ That’s it! You’re now ready to supercharge your React workflow with reusable, battle-tested hooks.
+
+---
+
+## 🙌 Start Using Hooks Today
+
+With `open-hook`, you can skip boilerplate and focus on building great UI.  
+Grab hooks you need, contribute what you create — and level up your React workflow 🎯
+
+> Want to contribute a hook? Check out our <EnvURL env="NEXT_PUBLIC_GITHUB_REPO" base="https://github.com" path="blob/main/.github/CONTRIBUTING.md" link>contributing guide</EnvURL>

@@ -1,17 +1,17 @@
-import './global.css';
-import { RootProvider } from 'fumadocs-ui/provider';
-import { Inter } from 'next/font/google';
-import type { ReactNode } from 'react';
-import type { Metadata } from "next"
+import "./global.css";
+import { RootProvider } from "fumadocs-ui/provider";
+import { Inter } from "next/font/google";
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/images/favicon-circular.png", // Replace with your actual filename if it's .png or .svg
+    icon: "/logo.svg", // Replace with your actual filename if it's .png or .svg
   },
 };
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ["latin"],
 });
 
 export default function Layout({ children }: { children: ReactNode }) {

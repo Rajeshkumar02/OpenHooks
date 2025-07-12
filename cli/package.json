@@ -1,13 +1,48 @@
 {
   "name": "open-hook",
-  "version": "1.0.3",
-  "description": "CLI to manage and install reusable React custom hooks from a centralized repo.",
-  "author": "Rajeshkumar S, Vigneshwar",
+  "version": "1.0.6",
+  "description": "📦 A developer-friendly CLI to install and manage reusable 🪝 React custom hooks directly from a centralized GitHub repository. Supports ⚙️ configuration, 📥 hook installation, 📃 listing with metadata, and works with both TypeScript and JavaScript.",
+  "author": "Rajeshkumar S<dev.rajeshkumars@gmail.com>, Vigneshwar R",
   "keywords": [
     "react",
     "hooks",
+    "custom hooks",
+    "react hooks",
     "cli",
-    "open-hooks"
+    "open-hook",
+    "openhooks",
+    "typescript",
+    "javascript",
+    "developer tools",
+    "reusable hooks",
+    "react utilities",
+    "frontend",
+    "react library",
+    "react cli",
+    "hook installer",
+    "npm cli",
+    "react developer tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rajeshkumar02/OpenHooks"
+  },
+  "bugs": {
+    "url": "https://github.com/Rajeshkumar02/OpenHooks/issues"
+  },
+  "homepage": "https://openhooks.is-a.dev",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "contributors": [
+    {
+      "name": "Rajeshkumar S",
+      "url": "https://github.com/Rajeshkumar02"
+    },
+    {
+      "name": "Vigneshwar",
+      "url": "https://github.com/vigneshwarr26001"
+    }
   ],
   "license": "MIT",
   "scripts": {

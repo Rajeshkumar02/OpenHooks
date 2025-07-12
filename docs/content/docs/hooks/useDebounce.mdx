@@ -3,7 +3,7 @@ title: useDebounce
 description: Debounce any changing value in React to improve performance and control effects.
 ---
 
-# \`useDebounce\`
+# `useDebounce`
 
 A reusable React hook to debounce any value. It delays updating the returned value until after the specified delay period has passed without changes. Useful for optimizing performance in high-frequency state updates like search input or resize events.
 
@@ -19,7 +19,7 @@ This hook is framework-independent and works in **React** and **Next.js** projec
 
 ## 🧠 Purpose
 
-\`useDebounce\` helps prevent frequent re-renders or side-effects by only acting on the final value after a specified period of inactivity.
+`useDebounce` helps prevent frequent re-renders or side-effects by only acting on the final value after a specified period of inactivity.
 
 ---
 
@@ -176,7 +176,7 @@ function useDebounce<T>(value: T, delay: number): T;
 
 ## 🧪 Testing Tip
 
-Log both \`query\` and \`debouncedQuery\` to clearly see the difference during typing:
+Log both `query` and `debouncedQuery` to clearly see the difference during typing:
 
 ```js
 console.log({ query, debouncedQuery });
@@ -210,4 +210,4 @@ console.log({ query, debouncedQuery });
 
 ## 🙋 Contribution
 
-Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!
+Found a bug or improvement? <EnvURL env="NEXT_PUBLIC_GITHUB_REPO" base="https://github.com" path="pulls" link>Submit a PR on GitHub</EnvURL>

@@ -3,7 +3,7 @@ title: useLocation
 description: A custom hook to fetch the user's geolocation on demand.
 ---
 
-# \`useLocation\`
+# `useLocation`
 
 A React hook that allows you to fetch the user's current geolocation when needed, with support for loading and error states.
 
@@ -157,10 +157,10 @@ export function useLocation() {
 ## 🧪 Example
 
 ```tsx
-import { useLocation } from "@/hooks/useLocation"
+import { useLocation } from "@/hooks/useLocation";
 
 export default function LocationButton() {
-  const { getLocation, location, loading, error } = useLocation()
+  const { getLocation, location, loading, error } = useLocation();
 
   return (
     <div>
@@ -173,7 +173,7 @@ export default function LocationButton() {
       )}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
-  )
+  );
 }
 ```
 
@@ -183,11 +183,11 @@ export default function LocationButton() {
 
 ```ts
 function useLocation(): {
-  getLocation: () => void
-  location: GeolocationCoordinates | null
-  loading: boolean
-  error: string | null
-}
+  getLocation: () => void;
+  location: GeolocationCoordinates | null;
+  loading: boolean;
+  error: string | null;
+};
 ```
 
 ---
@@ -195,28 +195,28 @@ function useLocation(): {
 ## 📝 Parameters
 
 <TypeTable
-    type={{
-        getLocation: {
-        description: "Triggers the geolocation fetch using browser's API",
-        type: "() => void",
-        required: true,
+  type={{
+    getLocation: {
+      description: "Triggers the geolocation fetch using browser's API",
+      type: "() => void",
+      required: true,
     },
     location: {
-        description: "Geolocation coordinates returned by the browser",
-        type: "GeolocationCoordinates | null",
-        required: true,
+      description: "Geolocation coordinates returned by the browser",
+      type: "GeolocationCoordinates | null",
+      required: true,
     },
     loading: {
-        description: "True if the location is currently being fetched",
-        type: "boolean",
-        required: true,
+      description: "True if the location is currently being fetched",
+      type: "boolean",
+      required: true,
     },
     error: {
-        description: "Error message if location fetching fails",
-        type: "string | null",
-        required: true,
+      description: "Error message if location fetching fails",
+      type: "string | null",
+      required: true,
     },
-}}
+  }}
 />
 
 ---
@@ -231,8 +231,9 @@ function useLocation(): {
 
 ## 🧯 How It Works
 
-<Callout type="info" title="Geolocation Support"> 
-The hook uses `navigator.geolocation` and gracefully handles unsupported browsers. 
+<Callout type="info" title="Geolocation Support">
+  The hook uses `navigator.geolocation` and gracefully handles unsupported
+  browsers.
 </Callout>
 
 ---
@@ -247,4 +248,4 @@ The hook uses `navigator.geolocation` and gracefully handles unsupported browser
 
 ## 🙋 Contribution
 
-Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!
+Found a bug or improvement? <EnvURL env="NEXT_PUBLIC_GITHUB_REPO" base="https://github.com" path="pulls" link>Submit a PR on GitHub</EnvURL>

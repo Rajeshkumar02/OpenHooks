@@ -5,6 +5,7 @@ import { AutoTypeTable } from "fumadocs-typescript/ui";
 import * as TabsComponents from "fumadocs-ui/components/tabs";
 import { TypeTable } from "fumadocs-ui/components/type-table";
 import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
+import { EnvURL } from "./components/EnvText";
 
 const generator = createGenerator();
 
@@ -17,6 +18,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...TabsComponents,
     TypeTable,
     DynamicCodeBlock,
+    EnvURL,
     ...components,
   };
 }
