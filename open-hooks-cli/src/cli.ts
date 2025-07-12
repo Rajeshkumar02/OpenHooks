@@ -9,7 +9,7 @@ const program = new Command();
 program
   .name("open-hooks")
   .description("CLI for managing custom React hooks")
-  .version(`1.0.11`);
+  .version(`1.0.12`);
 
 program
   .command("init")

@@ -5,6 +5,12 @@
       "description": "Persistent state hook",
       "js": true,
       "ts": true
+    },
+    {
+      "name": "Location",
+      "description": "Hook to get current location",
+      "js": true,
+      "ts": true
     }
   ]
 }
