@@ -14,7 +14,7 @@ function parseRepoUrl(repoUrl: string): {
   branch: string;
 } {
   const match = repoUrl.match(
-    /github\.com[/:]([^/]+)\/([^/#]+)(?:\.git)?(?:\/tree\/([^#]+))?/i
+    /github\.com[/:]([^/]+)\/([^/#]+)(?:\.git)?(?:\/tree\/([^#]+))?/i,
   );
 
   if (!match) {
@@ -39,7 +39,7 @@ export async function fetchHookList(repoUrl: string): Promise<HookInfo[]> {
     const manifestUrl = GITHUB_RAW_URL(
       `${owner}/${repo}`,
       branch,
-      REPO_CONFIG.MANIFEST_PATH
+      REPO_CONFIG.MANIFEST_PATH,
     );
 
     info(`Fetching hook list...`);
@@ -61,7 +61,7 @@ export async function downloadHook(
   repoUrl: string,
   hookName: string,
   language: "ts" | "js",
-  filePath: string
+  filePath: string,
 ): Promise<void> {
   try {
     const { owner, repo, branch } = parseRepoUrl(repoUrl);
@@ -71,12 +71,12 @@ export async function downloadHook(
     const hookPath = path.join(
       REPO_CONFIG.HOOKS_BASE_PATH,
       hookDir,
-      `${REPO_CONFIG.HOOK_FILE_PREFIX}${hookName}.${language}`
+      `${REPO_CONFIG.HOOK_FILE_PREFIX}${hookName}.${language}`,
     );
 
     const downloadUrl = GITHUB_RAW_URL(`${owner}/${repo}`, branch, hookPath);
 
-    info(`Downloading hook...`);
+    info(` Downloading the hook ${hookName} (${language})...`);
     const response = await axios.get(downloadUrl, { responseType: "text" });
 
     await fs.ensureDir(path.dirname(filePath));

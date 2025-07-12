@@ -4,35 +4,34 @@ import { fetchHookList, downloadHook } from "../utils/git";
 import { error, success, info } from "../utils/logger";
 import { validateHookName } from "../utils/validation";
 import path from "path";
+import fs from "fs/promises";
 import { REPO_CONFIG } from "../utils/constants";
 
-export async function addCommand(hookNames?: string[], options: any = {}) {
+export async function addCommand(hookNames: string[] = [], options: any = {}) {
   try {
     const config = await getConfig();
     const availableHooks = await fetchHookList(config.repoUrl);
 
     // Get hook names if not provided
-    let finalHookNames: string[] = hookNames || [];
+    let finalHookNames: string[] = [...hookNames];
+
     if (finalHookNames.length === 0) {
       const { selectedHooks } = await inquirer.prompt([
         {
           type: "checkbox",
           name: "selectedHooks",
-          message: "Select hooks to install:",
+          message:
+            "Select hooks to install (use space to select, enter to confirm):",
+          pageSize: 20,
           choices: availableHooks
             .filter((hook) => hook.js || hook.ts)
             .map((hook) => ({
-              name: hook.name,
+              name: `${hook.name}`,
               value: hook.name,
               checked: false,
-              description: `JS: ${hook.js ? "✓" : "✗"} | TS: ${hook.ts ? "✓" : "✗"}`,
             })),
-          validate: (input) => {
-            if (input.length === 0) {
-              return "You must choose at least one hook";
-            }
-            return true;
-          },
+          validate: (input) =>
+            input.length > 0 || "You must choose at least one hook",
         },
       ]);
       finalHookNames = selectedHooks;
@@ -97,17 +96,58 @@ export async function addCommand(hookNames?: string[], options: any = {}) {
     // Use directory from config
     const installDir = config.hooksDir;
 
-    // Download all selected hooks
-    const downloadPromises = hooksToInstall.map(async (hook) => {
+    // Check for existing files and prompt for overwrite
+    const hooksToProcess: { hook: any; filePath: string }[] = [];
+
+    for (const hook of hooksToInstall) {
       const fileName = `${REPO_CONFIG.HOOK_FILE_PREFIX}${hook.name}.${language}`;
       const filePath = path.join(installDir, fileName);
+
+      try {
+        await fs.access(filePath);
+        // File exists - prompt user
+        const { action } = await inquirer.prompt([
+          {
+            type: "list",
+            name: "action",
+            message: `Hook "${hook.name}" already exists at ${filePath}. What would you like to do?`,
+            choices: [
+              { name: "Replace with new version", value: "replace" },
+              { name: "Skip this hook", value: "skip" },
+              { name: "Cancel all", value: "cancel" },
+            ],
+          },
+        ]);
+
+        if (action === "replace") {
+          hooksToProcess.push({ hook, filePath });
+        } else if (action === "cancel") {
+          info("Operation cancelled by user");
+          return;
+        }
+        // If 'skip', do nothing - it won't be added to hooksToProcess
+      } catch {
+        // File doesn't exist - proceed with download
+        hooksToProcess.push({ hook, filePath });
+      }
+    }
+
+    if (hooksToProcess.length === 0) {
+      info("No hooks were added (all were skipped or cancelled)");
+      return;
+    }
+
+    // Download all selected hooks
+    const downloadPromises = hooksToProcess.map(async ({ hook, filePath }) => {
       await downloadHook(config.repoUrl, hook.name, language, filePath);
       return filePath;
     });
 
     const downloadedPaths = await Promise.all(downloadPromises);
 
-    success(`Successfully added hooks:\n${downloadedPaths.join("\n")}`);
+    success(
+      `Successfully added ${downloadedPaths.length} hooks:\n${downloadedPaths.join("\n")}`,
+    );
   } catch (err: any) {
     if (err.message === "Configuration missing") {
       error('No configuration found. Please run "open-hooks init" first.');
