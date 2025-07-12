@@ -18,18 +18,12 @@ export async function initCommand() {
       choices: ["ts", "js"],
       default: DEFAULT_CONFIG_VALUES.DEFAULT_LANGUAGE,
     },
-    {
-      type: "input",
-      name: "repoUrl",
-      message: CLI.PROMPTS.REPO_URL,
-      default: DEFAULT_CONFIG_VALUES.REPO_URL,
-    },
   ]);
 
   await saveConfig({
     hooksDir: answers.hooksDir,
     defaultLanguage: answers.defaultLanguage,
-    repoUrl: answers.repoUrl,
+    repoUrl: DEFAULT_CONFIG_VALUES.REPO_URL,
   });
 
   success("Configuration saved!");
