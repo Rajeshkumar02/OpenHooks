@@ -1,0 +1,250 @@
+---
+title: useLocation
+description: A custom hook to fetch the user's geolocation on demand.
+---
+
+# \`useLocation\`
+
+A React hook that allows you to fetch the user's current geolocation when needed, with support for loading and error states.
+
+---
+
+## 📦 Installation
+
+Works out of the box with React and Next.js projects. No external dependencies required.
+
+<Callout>No external dependency needed</Callout>
+
+---
+
+## 🧠 Purpose
+
+\useLocation\ helps you fetch the current location of the user using the browser's Geolocation API.
+
+---
+
+## 💡 Use Cases
+
+- Get user location for maps
+- Geo-personalized content
+- Weather apps
+
+---
+
+## 📁 Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="useLocation.ts"
+import { useState, useCallback } from "react";
+
+// Define the structure of the returned values from the hook
+type UseLocationResult = {
+  getLocation: () => void; // Function to trigger location fetch
+  location: GeolocationCoordinates | null; // Geolocation data (or null)
+  loading: boolean; // Whether fetching is in progress
+  error: string | null; // Error message if something goes wrong
+};
+
+/**
+ * useLocation - Custom hook to fetch device's geolocation on demand.
+ *
+ * @returns {UseLocationResult} - The fetch function and state values.
+ */
+export function useLocation(): UseLocationResult {
+  // Store geolocation coordinates
+  const [location, setLocation] = useState<GeolocationCoordinates | null>(null);
+
+  // Indicates if fetching is ongoing
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Stores any error that occurred during the fetch
+  const [error, setError] = useState<string | null>(null);
+
+  /**
+   * getLocation - Triggers the browser's geolocation API to get the current position.
+   */
+  const getLocation = useCallback(() => {
+    // Check if geolocation is supported
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setLoading(true); // Start loading state
+    setError(null); // Reset error
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(position.coords); // Save coordinates
+        setLoading(false); // Stop loading
+      },
+      (err) => {
+        setError(err.message); // Save error
+        setLoading(false); // Stop loading
+      }
+    );
+  }, []);
+
+  // Return all state and the location-fetching function
+  return { getLocation, location, loading, error };
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="useLocation.js"
+import { useState, useCallback } from "react";
+
+/**
+ * useLocation - A custom hook to fetch the user's geolocation on demand.
+ *
+ * @returns {{
+ *   getLocation: Function,              // Function to trigger location fetch
+ *   location: GeolocationCoordinates | null, // Geolocation result
+ *   loading: boolean,                  // Loading state
+ *   error: string | null               // Error message (if any)
+ * }}
+ */
+export function useLocation() {
+  // Stores the user's coordinates after a successful fetch
+  const [location, setLocation] = useState(null);
+
+  // Indicates if the location fetch is in progress
+  const [loading, setLoading] = useState(false);
+
+  // Stores any error message that may occur
+  const [error, setError] = useState(null);
+
+  /**
+   * getLocation - Triggers geolocation API to fetch the user's location.
+   */
+  const getLocation = useCallback(() => {
+    // Handle browsers that don't support geolocation
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setLoading(true); // Start loading
+    setError(null); // Reset any previous errors
+
+    // Attempt to get current position
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(position.coords); // Save the coordinates
+        setLoading(false); // Stop loading
+      },
+      (err) => {
+        setError(err.message); // Save the error message
+        setLoading(false); // Stop loading
+      }
+    );
+  }, []);
+
+  // Return state and trigger function
+  return { getLocation, location, loading, error };
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## 🧪 Example
+
+```tsx
+import { useLocation } from "@/hooks/useLocation"
+
+export default function LocationButton() {
+  const { getLocation, location, loading, error } = useLocation()
+
+  return (
+    <div>
+      <button onClick={getLocation}>Get Location</button>
+      {loading && <p>Loading...</p>}
+      {location && (
+        <p>
+          Lat: {location.latitude}, Lng: {location.longitude}
+        </p>
+      )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+    </div>
+  )
+}
+```
+
+---
+
+## 🧩 Hook Signature
+
+```ts
+function useLocation(): {
+  getLocation: () => void
+  location: GeolocationCoordinates | null
+  loading: boolean
+  error: string | null
+}
+```
+
+---
+
+## 📝 Parameters
+
+<TypeTable
+    type={{
+        getLocation: {
+        description: "Triggers the geolocation fetch using browser's API",
+        type: "() => void",
+        required: true,
+    },
+    location: {
+        description: "Geolocation coordinates returned by the browser",
+        type: "GeolocationCoordinates | null",
+        required: true,
+    },
+    loading: {
+        description: "True if the location is currently being fetched",
+        type: "boolean",
+        required: true,
+    },
+    error: {
+        description: "Error message if location fetching fails",
+        type: "string | null",
+        required: true,
+    },
+}}
+/>
+
+---
+
+## 🎯 Returns
+
+<Callout type="info" title="No Return Value">
+  This hook only runs a side-effect and does not return any value.
+</Callout>
+
+---
+
+## 🧯 How It Works
+
+<Callout type="info" title="Geolocation Support"> 
+The hook uses `navigator.geolocation` and gracefully handles unsupported browsers. 
+</Callout>
+
+---
+
+## 🏁 Summary
+
+- ✅ Simple interface with getLocation trigger
+- ✅ Handles loading and errors
+- ✅ Great for map-based or geo-personalized apps
+
+---
+
+## 🙋 Contribution
+
+Found a bug or improvement? [Submit a PR on GitHub](https://github.com/your-repo/hooks-docs)!
