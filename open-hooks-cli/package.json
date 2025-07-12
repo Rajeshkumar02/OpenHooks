@@ -1,6 +1,6 @@
 {
   "name": "open-hooks-cli",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "description": "CLI to manage and install reusable React custom hooks from a centralized repo.",
   "author": "Rajeshkumar S",
   "keywords": [

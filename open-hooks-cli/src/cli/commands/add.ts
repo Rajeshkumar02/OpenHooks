@@ -55,12 +55,12 @@ export async function addCommand(hookNames: string[] = [], options: any = {}) {
     );
 
     if (notFoundHooks.length > 0) {
-      error(`Hooks not found in repository: ${notFoundHooks.join(", ")}`);
+      error(`Hooks not found in repository, We will add it soon: ${notFoundHooks.join(", ")}`);
       return;
     }
 
     // Determine language
-    let language = options.language || config.defaultLanguage;
+    let language = options?.language || config?.defaultLanguage;
 
     // Validate language availability for each hook
     const unsupportedHooks: string[] = [];
@@ -68,25 +68,25 @@ export async function addCommand(hookNames: string[] = [], options: any = {}) {
 
     hooksToInstall.forEach((hook) => {
       if (language === "js" && !hook.js) {
-        unsupportedHooks.push(hook.name);
+        unsupportedHooks.push(hook?.name);
         if (hook.ts)
-          alternativeHooks.push({ name: hook.name, altLanguage: "ts" });
+          alternativeHooks.push({ name: hook?.name, altLanguage: "ts" });
       }
-      if (language === "ts" && !hook.ts) {
-        unsupportedHooks.push(hook.name);
+      if (language === "ts" && !hook?.ts) {
+        unsupportedHooks.push(hook?.name);
         if (hook.js)
           alternativeHooks.push({ name: hook.name, altLanguage: "js" });
       }
     });
 
-    if (unsupportedHooks.length > 0) {
+    if (unsupportedHooks?.length > 0) {
       error(
-        `The following hooks don't support ${language.toUpperCase()}: ${unsupportedHooks.join(", ")}`,
+        `The following hooks don't support ${language?.toUpperCase()}: ${unsupportedHooks?.join(", ")}`,
       );
-      if (alternativeHooks.length > 0) {
+      if (alternativeHooks?.length > 0) {
         info(
           `Alternatives available:\n${alternativeHooks
-            .map((h) => `- ${h.name}: Use --language ${h.altLanguage}`)
+            .map((h) => `- ${h?.name}: Use --language ${h?.altLanguage}`)
             .join("\n")}`,
         );
       }
