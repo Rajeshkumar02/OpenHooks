@@ -6,7 +6,7 @@
 ![PRs](https://img.shields.io/github/issues-pr/Rajeshkumar02/OpenHooks?style=flat-square)
 ![Hooks Count](https://img.shields.io/badge/hooks-dynamic-blue?style=flat-square)
 
----
+
 
 ## 📦 Overview
 
@@ -18,7 +18,7 @@
 - 🛠️ Choose between JavaScript or TypeScript
 - 🪝 Automatically update `hooks/manifest.json` for shared metadata
 
----
+
 
 ## 📁 Project Structure
 
@@ -35,7 +35,7 @@
 └── package.json
 ```
 
----
+
 
 ## 🧪 Installation
 
@@ -49,7 +49,7 @@ Or with `pnpm`:
 pnpm add -g open-hook
 ```
 
----
+
 
 ## 🚀 Usage
 
@@ -78,13 +78,13 @@ open-hook add useDebounce useClickOutside --language ts
 open-hook list
 ```
 
----
+
 
 ## 📚 Documentation
 
 You can explore available hooks and their documentation in the [`docs/`](./docs) folder or at the live site (if hosted).
 
----
+
 
 ## 🧑‍💻 Contributing
 
@@ -102,7 +102,7 @@ We welcome contributions from the community!
    ```
 4. Open a PR using the [PR Template](./.github/pull_request_template.md)
 
----
+
 
 ## 🛡️ Maintainers & Code Owners
 
@@ -111,13 +111,13 @@ This project is maintained by:
 - [@Rajeshkumar02](https://github.com/Rajeshkumar02)
 - [@vigneshwarr26001](https://github.com/vigneshwarr26001)
 
----
+
 
 ## 📝 License
 
 [MIT](./LICENSE)
 
----
+
 
 ## ❤️ Support
 
