@@ -2,7 +2,7 @@
 export const REPO_CONFIG = {
   // Default repository information
   DEFAULT_REPO: "Rajeshkumar02/OpenHooks",
-  DEFAULT_BRANCH: "DEV_INIT_PACKAGE",
+  DEFAULT_BRANCH: "main",
 
   // Repository structure paths
   HOOKS_BASE_PATH: "hooks",

@@ -2,13 +2,49 @@
   "hooks": [
     {
       "name": "LocalStorage",
-      "description": "Persistent state hook",
+      "description": "Syncs state with localStorage for persistent data across reloads.",
       "js": true,
       "ts": true
     },
     {
       "name": "Location",
-      "description": "Hook to get current location",
+      "description": "Fetches the user's current geolocation using the browser's Geolocation API.",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "ClickOutside",
+      "description": "Detects clicks outside a specified element to trigger callbacks (e.g. for closing modals or dropdowns).",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "Clipboard",
+      "description": "Provides utility to copy text to the clipboard and detect clipboard changes.",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "Debounce",
+      "description": "Delays execution of a function until after a specified delay has passed since the last call.",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "Mobile",
+      "description": "Detects if the current device is a mobile or tablet based on screen size or user agent.",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "Previous",
+      "description": "Returns the previous value of a state or prop from the previous render.",
+      "js": true,
+      "ts": true
+    },
+    {
+      "name": "Timeout",
+      "description": "Runs a function after a specified delay, with ability to clear or reset the timeout.",
       "js": true,
       "ts": true
     }
