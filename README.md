@@ -138,9 +138,7 @@ This document lists **available**, **planned**, and **suggested** hooks for a co
 ### **State Management (Planned)**
 - `useStateWithHistory`
 - `useFetch`
-- `useDebounce`
 - `useThrottle`
-- `useLocalStorage`
 - `useArrayState`
 - `useMapState`
 - `useQueueState`

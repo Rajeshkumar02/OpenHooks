@@ -191,6 +191,8 @@ pnpm dlx open-hook add useClickOutside
   <Tab value="TypeScript">
 
 ```ts title="hooks/useClickOutside.ts"
+"use client";
+
 import { useEffect } from "react";
 
 export function useClickOutside(
@@ -214,6 +216,8 @@ export function useClickOutside(
   <Tab value="JavaScript">
 
 ```js title="hooks/useClickOutside.js"
+"use client";
+
 import { useEffect } from "react";
 
 export function useClickOutside(ref, callback) {
