@@ -1,3 +1,10 @@
 {
-  "pages": ["index", "hooks", "components"]
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "installation",
+    "examples",
+    "event-handling",
+    "contributing"
+  ]
 }

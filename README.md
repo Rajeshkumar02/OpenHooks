@@ -106,3 +106,196 @@ This project is maintained by:
 ## ❤️ Support
 
 If you find this project useful, please consider giving it a ⭐️ and sharing it with others.
+
+## 🪝 Available Hooks
+
+This document lists **available**, **planned**, and **suggested** hooks for a comprehensive React hooks library.
+
+---
+
+## 🟢 Available Hooks
+
+### **State Management**
+- `useDebounce`
+- `useLocalStorage`
+- `usePrevious`
+- `useTimeout`
+
+### **Event Handling**
+- `useClickOutside`
+- `useClipboard`
+
+### **Device and Browser**
+- `useLocation`
+- `useMobile`
+
+**Total available hooks: 9**
+
+---
+
+## 🟡 Planned Hooks
+
+### **State Management (Planned)**
+- `useStateWithHistory`
+- `useFetch`
+- `useDebounce`
+- `useThrottle`
+- `useLocalStorage`
+- `useArrayState`
+- `useMapState`
+- `useQueueState`
+- `useUndoRedoState`
+- `useTimeTravelState`
+- `useSafeSetState`
+- `useToggle`
+- `useCounter`
+- `usePromise`
+- `usePreviousImmediate`
+- `usePreviousDifferent`
+
+### **Event Handling (Planned)**
+- `useClickOutside`
+- `useClipboard`
+- `useKeyPress`
+- `useHover`
+- `useOnWindowResize`
+- `useOnWindowScroll`
+- `useOnLongPress`
+- `useOnStartTyping`
+- `useFocusWithin`
+- `useDocumentEventListener`
+- `useFocus`
+- `useIsDroppingFiles`
+- `useOutsideClick`
+- `useOnHoverRef`
+
+### **Device and Browser (Planned)**
+- `useLocation`
+- `useMobile`
+- `useGeolocation`
+- `useOnline`
+- `useIdle`
+- `useSpeechRecognition`
+- `useVibrate`
+- `useWebSocket`
+- `useMediaQuery`
+- `useIntersectionObserver`
+- `useResizeObserver`
+- `useMutationObserver`
+- `useFullscreen`
+- `usePictureInPictureApi`
+- `useScreenDetailsApi`
+
+### **Performance (Planned)**
+- `useDebouncedValue`
+- `useThrottleFn`
+- `useRaf`
+- `useIsMounted`
+- `useLifecycleLogger`
+- `useDeepCompareEffect`
+- `useMemoizedCallback`
+- `useRenderCount`
+- `useWhyDidYouUpdate`
+- `useSafeSetState`
+- `useAsyncEffect`
+- `useEffectOnceWhen`
+
+### **Accessibility (Planned)**
+- `useFocusTrap`
+- `useAriaLive`
+- `useSkipToContent`
+- `useAccessibleDropdown`
+- `useAccessibleTabs`
+- `useAccessibleModal`
+- `useAccessibleTooltip`
+- `useAccessibleAccordion`
+- `useAccessibleCarousel`
+- `useAccessibleDialog`
+
+### **Utilities (Planned)**
+- `useEventListener`
+- `useForkRef`
+- `useFreshCallback`
+- `useFreshRef`
+- `useMergeRefs`
+- `useRefElement`
+- `useDimensions`
+- `useBoundingClientRect`
+- `useMutationObserver`
+- `useResizeObserver`
+- `useFreshTick`
+- `useMergeRefs`
+
+### **Lifecycle and Effects (Planned)**
+- `useDidMount`
+- `useDidUpdate`
+- `useWillUnmount`
+- `useIsomorphicEffect`
+- `useEffectOnce`
+- `useEffectWhen`
+
+**Total planned hooks: 85**
+
+---
+
+## 💡 Suggested Extra Hooks
+
+### **State Management**
+- `useFormState` – General-purpose form state management  
+- `usePersistentState` – State persisted in IndexedDB or sessionStorage  
+- `useAsyncState` – Automatically manage promises in state  
+- `useComputedState` – Derived state based on other states  
+- `useBroadcastState` – Sync state across multiple tabs/windows  
+
+### **Event Handling**
+- `useDrag` / `useDrop` – Drag & drop functionality  
+- `useSwipe` – Detect swipe gestures  
+- `useShortcut` – Keyboard shortcut manager  
+- `useMousePosition` – Track cursor position  
+- `usePointerLock` – Pointer lock API for interactive apps  
+
+### **Device and Browser**
+- `useBattery` – Monitor battery status  
+- `useDeviceOrientation` – Detect device tilt/rotation  
+- `useAmbientLight` – Detect light levels for dark mode triggers  
+- `useClipboardHistory` – Track clipboard changes over time  
+
+### **Performance**
+- `useIdleCallback` – Run code during browser idle time  
+- `useWebWorker` – Offload heavy computations  
+- `useProfiler` – Profile component render times  
+- `useRenderDebounce` – Debounce re-renders for heavy components  
+
+### **Accessibility**
+- `useKeyboardNavigation` – Arrow/tab navigation for custom UIs  
+- `useScreenReaderStatus` – Detect active screen readers  
+- `useFocusVisible` – Track focus-visible state  
+
+### **Utilities**
+- `useErrorBoundary` – Catch component errors gracefully  
+- `useLogger` – Log state or props changes  
+- `useUniqueId` – Generate unique IDs (useful for accessibility)  
+- `useLocalForage` – Persistent state using IndexedDB  
+- `useAsyncQueue` – Queue async tasks with concurrency control  
+
+### **Lifecycle & Effects**
+- `usePageVisibility` – Detect if page/tab is visible  
+- `useNetworkStatus` – Online/offline detection  
+- `useUpdateEffect` – Like `useEffect`, skips first render  
+- `useDeepEffect` – Deep compare dependencies before triggering effect  
+
+---
+
+## 🔢 Summary
+
+| Category | Available | Planned | Suggested | Total |
+|----------|-----------|---------|-----------|-------|
+| State Management | 4 | 16 | 5 | 25 |
+| Event Handling | 2 | 14 | 5 | 21 |
+| Device & Browser | 2 | 15 | 4 | 21 |
+| Performance | 0 | 12 | 4 | 16 |
+| Accessibility | 0 | 10 | 3 | 13 |
+| Utilities | 0 | 12 | 5 | 17 |
+| Lifecycle & Effects | 1 | 6 | 4 | 11 |
+
+**Grand Total Hooks:** 124

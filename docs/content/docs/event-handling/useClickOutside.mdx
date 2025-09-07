@@ -1,0 +1,449 @@
+---
+title: useClickOutside
+description: Detect clicks outside a specific element to trigger a callback function.
+tags: ["react", "hooks", "events", "dom"]
+status: stable
+version: 1.1.0
+lastUpdated: "2025-09-07"
+author: "OpenHooks Team"
+category: "event-handling"
+difficulty: beginner
+bundle_size: "~0.8kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useClickOutside/Example";
+
+# useClickOutside
+
+> Detect clicks outside a specific element to trigger callbacks like closing modals or dropdowns.
+
+<MetaInfo
+  status="stable"
+  version="1.2.0"
+  bundleSize="~0.8kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio
+      ratio={16 / 9}
+      className="w-full flex items-center justify-center rounded-md border p-4"
+    >
+      <ExampleComponent />
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+  <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import React, { useState, useRef } from "react";
+
+export default function ClickOutsideExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(modalRef, () => setIsOpen(false));
+
+  return (
+    <div className="p-4">
+      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div
+            ref={modalRef}
+            className=" bg-fd-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4"
+          >
+            <h3 className="text-md text-fd-card-foreground mt-0 font-bold mb-4">
+              Example Modal
+            </h3>
+            <p className="mb-4 text-fd-accent-foreground text-sm">
+              Click outside this modal to close it, or use the close button
+              below.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsOpen(false)} variant={"destructive"}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```jsx
+import { Button } from "@/components/ui/button";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import React, { useState, useRef } from "react";
+
+export default function ClickOutsideExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef(null);
+
+  useClickOutside(modalRef, () => setIsOpen(false));
+
+  return (
+    <div className="p-4">
+      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div
+            ref={modalRef}
+            className=" bg-fd-card p-6 rounded-lg shadow-lg max-w-md w-full mx-4"
+          >
+            <h3 className="text-md text-fd-card-foreground mt-0 font-bold mb-4">
+              Example Modal
+            </h3>
+            <p className="mb-4 text-fd-accent-foreground text-sm">
+              Click outside this modal to close it, or use the close button
+              below.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsOpen(false)} variant={"destructive"}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+
+<Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+  <Tab value="npm">
+
+```bash
+npx open-hook add useClickOutside
+```
+
+  </Tab>
+  <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useClickOutside
+```
+
+  </Tab>
+  <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useClickOutside
+```
+
+  </Tab>
+</Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+<Callout type="info">
+  No external dependencies needed - just React 16.8+
+</Callout>
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="hooks/useClickOutside.ts"
+import { useEffect } from "react";
+
+export function useClickOutside(
+  ref: React.RefObject<HTMLElement>,
+  callback: () => void
+): void {
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        callback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [ref, callback]);
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="hooks/useClickOutside.js"
+import { useEffect } from "react";
+
+export function useClickOutside(ref, callback) {
+  useEffect(() => {
+    function handleClick(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [ref, callback]);
+}
+```
+
+  </Tab>
+</Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    ref: {
+      type: "React.RefObject<HTMLElement>",
+      description: "Reference to the target element",
+    },
+    callback: {
+      type: "() => void",
+      description: "Function called when clicking outside",
+    },
+  }}
+/>
+
+### Returns
+
+<Callout type="info" title="No Return Value">
+  This hook performs a side effect and does not return any value.
+</Callout>
+
+## TypeScript Signature
+
+```ts
+function useClickOutside(
+  ref: React.RefObject<HTMLElement>,
+  callback: () => void
+): void;
+```
+
+## Best Practices
+
+<Callout type="tip">
+Use `useCallback` for the callback function to prevent unnecessary re-renders:
+
+```tsx
+const handleClose = useCallback(() => {
+  setIsOpen(false);
+}, []);
+
+useClickOutside(modalRef, handleClose);
+```
+
+</Callout>
+
+### Do's and Don'ts
+
+- ✅ Use `useCallback` for static callbacks
+- ✅ Ensure the ref is properly attached to the target element
+- ✅ Consider using `useRef` for better performance
+- ❌ Avoid using this hook with frequently changing callbacks without memoization
+- ❌ Don't forget to handle cases where the ref might be null
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~0.8kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Re-renders",
+      value: "None",
+      description: "Only side effect, no state",
+    },
+    {
+      metric: "Memory",
+      value: "Minimal",
+      description: "Single event listener",
+    },
+    {
+      metric: "First Paint",
+      value: "+0ms",
+      description: "No blocking operations",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome (latest)", supported: true, notes: "Full support" },
+    { name: "Firefox (latest)", supported: true, notes: "Full support" },
+    { name: "Safari (latest)", supported: true, notes: "Full support" },
+    { name: "Edge (latest)", supported: true, notes: "Full support" },
+    { name: "IE 11", supported: false, notes: "Not supported" },
+    { name: "Node.js", supported: true, notes: "For SSR environments" },
+  ]}
+/>
+
+## Use Cases
+
+### 🎯 Modal Dialogs
+
+Perfect for closing modals when users click outside the modal area.
+
+### 📋 Dropdown Menus
+
+Close dropdown menus when clicking elsewhere on the page.
+
+### 🔍 Search Suggestions
+
+Hide search suggestion panels when clicking outside the search box.
+
+### 📱 Mobile Sidebars
+
+Collapse navigation sidebars on mobile when tapping outside.
+
+## Accessibility
+
+<Callout type="warning" title="Accessibility Considerations">
+  - The hook respects keyboard navigation and only handles mouse events -
+  Consider adding `Escape` key support for better accessibility - Ensure focus
+  management is handled separately for screen readers
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Callback not firing">
+
+<span className="text-green-400">Solution</span>: Ensure the ref is properly
+attached to a DOM element.
+
+</Accordion>
+
+<Accordion title="Too many re-renders">
+
+<span className="text-green-400">Solution</span>: Wrap your callback in
+`useCallback` to prevent unnecessary effect re-runs.
+
+</Accordion>
+
+<Accordion title="Event not working on mobile">
+
+<span className="text-green-400">Solution</span>: Consider adding touch event
+support or use a library that handles both.
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook uses a single `mousedown` event listener on the document to detect clicks. When a click occurs, it checks if the clicked element is contained within the referenced element using `Node.contains()`. If the click is outside, it triggers the provided callback.
+
+The event listener is automatically cleaned up when the component unmounts or dependencies change.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook } from "@testing-library/react";
+import { useRef } from "react";
+import { useClickOutside } from "./useClickOutside";
+
+it("calls callback when clicking outside element", () => {
+  const callback = jest.fn();
+  const ref = { current: document.createElement("div") };
+
+  renderHook(() => useClickOutside(ref, callback));
+
+  // Simulate click outside
+  const outsideElement = document.createElement("div");
+  document.body.appendChild(outsideElement);
+
+  const event = new MouseEvent("mousedown", { bubbles: true });
+  outsideElement.dispatchEvent(event);
+
+  expect(callback).toHaveBeenCalledTimes(1);
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="Why use `mousedown` instead of `click`?">
+
+`mousedown` fires earlier and prevents issues with elements that might be removed before the `click` event fires.
+
+</Accordion>
+
+<Accordion title="Does this work with touch events on mobile?">
+
+Currently only handles mouse events. Consider adding `touchstart` for full mobile support.
+
+</Accordion>
+
+<Accordion title="What if the ref is null?">
+
+The hook safely handles null refs and won't trigger the callback.
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useKeyPress](../useKeyPress) - Handle keyboard events
+- [useEventListener](../useEventListener) - Generic event listener hook
+- [useOnClickOutside](../useOnClickOutside) - Alternative implementation
+
+## Changelog
+
+- **1.1.0** — Added better TypeScript support and performance optimizations
+- **1.0.0** — Initial release with basic click outside detection

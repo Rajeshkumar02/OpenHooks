@@ -1,0 +1,458 @@
+---
+title: Examples
+description: Real-world examples and usage patterns for OpenHooks in different scenarios.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import { Card, Cards } from "fumadocs-ui/components/card";
+
+# Examples
+
+Discover how to use OpenHooks in real-world scenarios with these practical examples.
+
+---
+
+## 🎯 Common Use Cases
+
+<Cards>
+  <Card
+    title="Modal Components"
+    description="Building accessible modals with click-outside behavior"
+    href="#modal-components"
+  />
+  <Card
+    title="Search Interfaces"
+    description="Debounced search with local storage persistence"
+    href="#search-interfaces"
+  />
+  <Card
+    title="Mobile-First Design"
+    description="Responsive components that adapt to device type"
+    href="#mobile-first-design"
+  />
+  <Card
+    title="Form Handling"
+    description="Enhanced forms with validation and persistence"
+    href="#form-handling"
+  />
+</Cards>
+
+---
+
+## 🎭 Modal Components
+
+### Basic Modal with Click Outside
+
+```tsx
+import { useRef, useState } from "react";
+import { useClickOutside } from "./hooks/useClickOutside";
+
+function Modal({ isOpen, onClose, children }) {
+  const modalRef = useRef(null);
+
+  useClickOutside(modalRef, onClose);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div ref={modalRef} className="modal-content">
+        <button onClick={onClose} className="close-button">
+          ×
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// Usage
+function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2>Modal Content</h2>
+        <p>Click outside to close!</p>
+      </Modal>
+    </div>
+  );
+}
+```
+
+### Advanced Modal with Keyboard Support
+
+```tsx
+import { useRef, useState, useEffect } from "react";
+import { useClickOutside } from "./hooks/useClickOutside";
+
+function AdvancedModal({ isOpen, onClose, children }) {
+  const modalRef = useRef(null);
+
+  useClickOutside(modalRef, onClose);
+
+  // Add keyboard support
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      // Focus trap
+      modalRef.current?.focus();
+    }
+
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" role="dialog" aria-modal="true">
+      <div ref={modalRef} className="modal-content" tabIndex={-1}>
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## 🔍 Search Interfaces
+
+### Debounced Search with Persistence
+
+```tsx
+import { useState, useEffect } from "react";
+import { useDebounce } from "./hooks/useDebounce";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+
+function SearchInterface() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [recentSearches, setRecentSearches] = useLocalStorage(
+    "recent-searches",
+    []
+  );
+
+  const debouncedQuery = useDebounce(query, 300);
+
+  // Perform search when debounced query changes
+  useEffect(() => {
+    if (debouncedQuery.trim()) {
+      performSearch(debouncedQuery);
+      // Add to recent searches
+      setRecentSearches((prev) => [
+        debouncedQuery,
+        ...prev.filter((term) => term !== debouncedQuery).slice(0, 4),
+      ]);
+    }
+  }, [debouncedQuery]);
+
+  const performSearch = async (searchTerm) => {
+    try {
+      const response = await fetch(`/api/search?q=${searchTerm}`);
+      const data = await response.json();
+      setResults(data.results);
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  };
+
+  return (
+    <div className="search-container">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+        className="search-input"
+      />
+
+      {/* Recent searches */}
+      {!query && recentSearches.length > 0 && (
+        <div className="recent-searches">
+          <h3>Recent Searches</h3>
+          {recentSearches.map((term, index) => (
+            <button
+              key={index}
+              onClick={() => setQuery(term)}
+              className="recent-search-item"
+            >
+              {term}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Search results */}
+      {results.length > 0 && (
+        <div className="search-results">
+          {results.map((result) => (
+            <div key={result.id} className="search-result">
+              <h4>{result.title}</h4>
+              <p>{result.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## 📱 Mobile-First Design
+
+### Responsive Navigation
+
+```tsx
+import { useState } from "react";
+import { useMobile } from "./hooks/useMobile";
+import { useClickOutside } from "./hooks/useClickOutside";
+
+function ResponsiveNavigation() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useMobile();
+  const menuRef = useRef(null);
+
+  useClickOutside(menuRef, () => {
+    if (isMobile) setIsMenuOpen(false);
+  });
+
+  return (
+    <nav className="navigation">
+      <div className="nav-brand">
+        <h1>My App</h1>
+      </div>
+
+      {isMobile ? (
+        // Mobile navigation
+        <>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="menu-toggle"
+          >
+            ☰
+          </button>
+
+          {isMenuOpen && (
+            <div ref={menuRef} className="mobile-menu">
+              <a href="/">Home</a>
+              <a href="/about">About</a>
+              <a href="/contact">Contact</a>
+            </div>
+          )}
+        </>
+      ) : (
+        // Desktop navigation
+        <div className="desktop-menu">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+        </div>
+      )}
+    </nav>
+  );
+}
+```
+
+### Adaptive Content Layout
+
+```tsx
+import { useMobile } from "./hooks/useMobile";
+
+function AdaptiveLayout({ children }) {
+  const isMobile = useMobile();
+
+  return (
+    <div className={`layout ${isMobile ? "mobile" : "desktop"}`}>
+      <header className="header">
+        <Navigation />
+      </header>
+
+      <main className="main-content">
+        {isMobile ? (
+          // Mobile-optimized layout
+          <div className="mobile-stack">{children}</div>
+        ) : (
+          // Desktop layout with sidebar
+          <div className="desktop-grid">
+            <aside className="sidebar">
+              <Sidebar />
+            </aside>
+            <div className="content">{children}</div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+```
+
+---
+
+## 📝 Form Handling
+
+### Persistent Form with Auto-save
+
+```tsx
+import { useState, useEffect } from "react";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useDebounce } from "./hooks/useDebounce";
+
+function PersistentForm() {
+  const [formData, setFormData] = useLocalStorage("form-draft", {
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [isDraft, setIsDraft] = useState(false);
+  const debouncedFormData = useDebounce(formData, 1000);
+
+  // Auto-save draft
+  useEffect(() => {
+    if (
+      debouncedFormData.name ||
+      debouncedFormData.email ||
+      debouncedFormData.message
+    ) {
+      setIsDraft(true);
+      console.log("Draft saved automatically");
+    }
+  }, [debouncedFormData]);
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await submitForm(formData);
+      // Clear draft after successful submission
+      setFormData({ name: "", email: "", message: "" });
+      setIsDraft(false);
+      alert("Form submitted successfully!");
+    } catch (error) {
+      alert("Submission failed. Your draft has been saved.");
+    }
+  };
+
+  const clearDraft = () => {
+    setFormData({ name: "", email: "", message: "" });
+    setIsDraft(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="persistent-form">
+      {isDraft && (
+        <div className="draft-notice">
+          📝 Draft saved automatically
+          <button type="button" onClick={clearDraft}>
+            Clear Draft
+          </button>
+        </div>
+      )}
+
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => handleInputChange("name", e.target.value)}
+        placeholder="Your Name"
+      />
+
+      <input
+        type="email"
+        value={formData.email}
+        onChange={(e) => handleInputChange("email", e.target.value)}
+        placeholder="Your Email"
+      />
+
+      <textarea
+        value={formData.message}
+        onChange={(e) => handleInputChange("message", e.target.value)}
+        placeholder="Your Message"
+        rows={5}
+      />
+
+      <button type="submit">Submit Form</button>
+    </form>
+  );
+}
+```
+
+---
+
+## 🎮 Interactive Components
+
+### Copy-to-Clipboard Button
+
+```tsx
+import { useClipboard } from "./hooks/useClipboard";
+
+function CopyButton({ text, children }) {
+  const { copied, copyToClipboard } = useClipboard();
+
+  return (
+    <button
+      onClick={() => copyToClipboard(text)}
+      className={`copy-button ${copied ? "copied" : ""}`}
+    >
+      {copied ? "✅ Copied!" : children}
+    </button>
+  );
+}
+
+// Usage
+function CodeBlock({ code }) {
+  return (
+    <div className="code-block">
+      <pre>{code}</pre>
+      <CopyButton text={code}>📋 Copy Code</CopyButton>
+    </div>
+  );
+}
+```
+
+---
+
+## 🔧 Integration Tips
+
+<Callout type="tip">
+  **Combine Multiple Hooks**: Most real-world components benefit from combining
+  multiple hooks. For example, a search component might use `useDebounce`,
+  `useLocalStorage`, and `useClickOutside` together.
+</Callout>
+
+<Callout type="info">
+  **Performance**: Remember to use `useCallback` and `useMemo` when passing
+  callbacks to OpenHooks to prevent unnecessary re-renders.
+</Callout>
+
+<Callout type="warning">
+  **Accessibility**: Always consider accessibility when using hooks like
+  `useClickOutside`. Provide keyboard alternatives and proper ARIA attributes.
+</Callout>
+
+---
+
+## 📚 Next Steps
+
+Ready to implement these patterns in your project?
+
+- [Browse all available hooks](/docs/hooks)
+- [Check the installation guide](/docs/installation)
+- [Contribute your own examples](https://github.com/Rajeshkumar02/OpenHooks/issues)
