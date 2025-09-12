@@ -1,4 +1,4 @@
 {
   "title": "State Management",
-  "pages": ["useDebounce"]
+  "pages": ["useDebounce", "useLocalStorage"]
 }
