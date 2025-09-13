@@ -1,0 +1,648 @@
+---
+title: usePrevious
+description: Track the previous value of a state or prop in React components with automatic persistence across renders.
+tags: ["react", "hooks", "state", "previous", "tracking"]
+status: stable
+version: 2.0.0
+lastUpdated: "2025-09-13"
+author: "OpenHooks Team"
+category: "state-management"
+difficulty: beginner
+bundle_size: "~0.3kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { History, ArrowLeft, Clock, GitBranch } from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/usePrevious/Example";
+
+# usePrevious
+
+> Track the previous value of a state or prop in React components with automatic persistence across renders.
+
+<MetaInfo
+  status="stable"
+  version="2.0.0"
+  bundleSize="~0.3kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```tsx
+import { useState } from "react";
+import { usePrevious } from "@/hooks/usePrevious";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePrevious(count);
+
+  return (
+    <div>
+      <h2>Counter Example</h2>
+      <p>Current: {count}</p>
+      <p>Previous: {previousCount ?? "undefined"}</p>
+
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setCount(count - 1)}>Decrement</button>
+
+      {previousCount !== undefined && (
+        <p>Changed by: {count - previousCount}</p>
+      )}
+    </div>
+  );
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```jsx
+import { useState } from "react";
+import { usePrevious } from "@/hooks/usePrevious";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePrevious(count);
+
+  return (
+    <div>
+      <h2>Counter Example</h2>
+      <p>Current: {count}</p>
+      <p>Previous: {previousCount ?? "undefined"}</p>
+
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setCount(count - 1)}>Decrement</button>
+
+      {previousCount !== undefined && (
+        <p>Changed by: {count - previousCount}</p>
+      )}
+    </div>
+  );
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+    <Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+      <Tab value="npm">
+
+```bash
+npx open-hook add usePrevious
+```
+
+      </Tab>
+      <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add usePrevious
+```
+
+      </Tab>
+      <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add usePrevious
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+    <Callout type="info">
+      No external dependencies needed - just React 16.8+
+    </Callout>
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```ts title="hooks/usePrevious.ts"
+import { useRef, useEffect } from "react";
+
+export function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>();
+
+  useEffect(() => {
+    ref.current = value;
+  });
+
+  return ref.current;
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```js title="hooks/usePrevious.js"
+import { useRef, useEffect } from "react";
+
+export function usePrevious(value) {
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current = value;
+  });
+
+  return ref.current;
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    value: {
+      type: "T",
+      description: "The value to track. Can be any type.",
+    },
+  }}
+/>
+
+### Returns
+
+<TypeTable
+  type={{
+    previousValue: {
+      type: "T | undefined",
+      description: "The previous value. Returns undefined on first render.",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+function usePrevious<T>(value: T): T | undefined;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["State Comparison", "Props Tracking", "Effect Dependencies", "Form Validation"]}>
+  <Tab value="State Comparison">
+
+```tsx
+function SearchResults() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const previousQuery = usePrevious(query);
+
+  useEffect(() => {
+    if (query !== previousQuery && query.length > 0) {
+      // Only search when query actually changed
+      searchAPI(query).then(setResults);
+    }
+  }, [query, previousQuery]);
+
+  return (
+    <div>
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+      />
+      {previousQuery && <p>Previous search: {previousQuery}</p>}
+      <div>{/* Render results */}</div>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Props Tracking">
+
+```tsx
+interface UserProfileProps {
+  userId: string;
+  userName: string;
+}
+
+function UserProfile({ userId, userName }: UserProfileProps) {
+  const previousUserId = usePrevious(userId);
+  const previousUserName = usePrevious(userName);
+
+  useEffect(() => {
+    if (userId !== previousUserId) {
+      // User changed, fetch new profile data
+      fetchUserProfile(userId);
+    }
+  }, [userId, previousUserId]);
+
+  useEffect(() => {
+    if (userName !== previousUserName && previousUserName) {
+      // Name updated, show notification
+      showNotification(`Name changed from ${previousUserName} to ${userName}`);
+    }
+  }, [userName, previousUserName]);
+
+  return <div>{/* Profile UI */}</div>;
+}
+```
+
+  </Tab>
+  <Tab value="Effect Dependencies">
+
+```tsx
+function DataProcessor({ data, filters }) {
+  const [processedData, setProcessedData] = useState([]);
+  const previousData = usePrevious(data);
+  const previousFilters = usePrevious(filters);
+
+  useEffect(() => {
+    const dataChanged = data !== previousData;
+    const filtersChanged =
+      JSON.stringify(filters) !== JSON.stringify(previousFilters);
+
+    if (dataChanged || filtersChanged) {
+      // Only process when actual changes occurred
+      const processed = processData(data, filters);
+      setProcessedData(processed);
+
+      if (dataChanged) {
+        console.log("Data updated");
+      }
+      if (filtersChanged) {
+        console.log("Filters updated");
+      }
+    }
+  }, [data, filters, previousData, previousFilters]);
+
+  return <div>{/* Render processed data */}</div>;
+}
+```
+
+  </Tab>
+  <Tab value="Form Validation">
+
+```tsx
+function FormField({ value, onValidate }) {
+  const [error, setError] = useState("");
+  const previousValue = usePrevious(value);
+
+  useEffect(() => {
+    if (value !== previousValue && previousValue !== undefined) {
+      // Only validate after user has interacted
+      const validationError = validateField(value);
+      setError(validationError);
+      onValidate(validationError);
+    }
+  }, [value, previousValue, onValidate]);
+
+  return (
+    <div>
+      <input value={value} onChange={/* ... */} />
+      {error && <span className="error">{error}</span>}
+      {previousValue && value !== previousValue && (
+        <span className="change-indicator">Changed</span>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Use usePrevious strategically for performance optimization and user experience:
+
+```tsx
+// ✅ Good - Track meaningful state changes
+const previousUser = usePrevious(user);
+
+// ✅ Good - Optimize expensive operations
+if (data !== previousData) {
+  performExpensiveCalculation(data);
+}
+
+// ❌ Avoid - Tracking every render
+const previousRenderCount = usePrevious(renderCount++);
+```
+
+</Callout>
+
+### Performance Guidelines
+
+- **🎯 Selective Tracking**: Only track values that need comparison
+- **🔄 Effect Optimization**: Use with useEffect to prevent unnecessary operations
+- **📊 State Monitoring**: Track critical state changes for analytics
+- **🎨 UI Feedback**: Show users what changed in forms or interfaces
+
+### Do's and Don'ts
+
+- ✅ Use for expensive operation optimization
+- ✅ Track prop changes in child components
+- ✅ Implement undo/redo functionality
+- ✅ Create smooth UI transitions
+- ❌ Don't track every single state variable
+- ❌ Avoid deep object comparisons without memoization
+- ❌ Don't use for simple boolean toggles
+- ❌ Avoid in every component unnecessarily
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~0.3kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Render Impact",
+      value: "Minimal",
+      description: "Only stores reference",
+    },
+    {
+      metric: "Memory Usage",
+      value: "Single ref",
+      description: "One previous value stored",
+    },
+    {
+      metric: "Performance",
+      value: "Excellent",
+      description: "No complex operations",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome (latest)", supported: true, notes: "Full support" },
+    { name: "Firefox (latest)", supported: true, notes: "Full support" },
+    { name: "Safari (latest)", supported: true, notes: "Full support" },
+    { name: "Edge (latest)", supported: true, notes: "Full support" },
+    { name: "IE 11", supported: false, notes: "useRef/useEffect required" },
+    { name: "Node.js", supported: true, notes: "SSR compatible" },
+  ]}
+/>
+
+## Use Cases
+
+### <History className="inline w-4 h-4 mr-2" /> State Change Detection
+
+Compare current and previous state to trigger specific actions.
+
+### <ArrowLeft className="inline w-4 h-4 mr-2" /> Undo/Redo Systems
+
+Store previous values for implementing undo functionality.
+
+### <Clock className="inline w-4 h-4 mr-2" /> Performance Optimization
+
+Prevent unnecessary re-computations or API calls.
+
+### <GitBranch className="inline w-4 h-4 mr-2" /> UI Transitions
+
+Create smooth animations based on value changes.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - Use previous values to announce changes to screen readers - Track focus
+  states for better keyboard navigation - Monitor form field changes for
+  validation feedback - Implement accessible undo/redo announcements
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Previous value is always undefined">
+
+**Solution:** This is expected behavior on the first render. Handle it appropriately:
+
+```tsx
+const previousValue = usePrevious(value);
+
+// Check for undefined before using
+if (previousValue !== undefined) {
+  // Safe to use previousValue
+  console.log("Changed from", previousValue, "to", value);
+}
+```
+
+</Accordion>
+
+<Accordion title="Previous value not updating correctly">
+
+**Solution:** Ensure you're not modifying objects in place:
+
+```tsx
+// ❌ Wrong - mutating object
+const [user, setUser] = useState({ name: "John" });
+user.name = "Jane"; // This won't trigger usePrevious
+
+// ✅ Correct - creating new object
+setUser((prev) => ({ ...prev, name: "Jane" }));
+```
+
+</Accordion>
+
+<Accordion title="Memory leaks with complex objects">
+
+**Solution:** Be cautious with large objects and consider cleanup:
+
+```tsx
+// For large objects, consider manual cleanup
+useEffect(() => {
+  return () => {
+    // Cleanup if needed
+  };
+}, []);
+```
+
+</Accordion>
+
+<Accordion title="Comparing objects or arrays">
+
+**Solution:** Use JSON.stringify for simple comparisons or deep equality libs:
+
+```tsx
+// Simple comparison
+const previousData = usePrevious(JSON.stringify(data));
+const hasChanged = JSON.stringify(data) !== previousData;
+
+// Or use a deep equality library
+import isEqual from "lodash/isEqual";
+const hasChanged = !isEqual(data, previousData);
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook uses useRef to store the previous value and useEffect to update it after each render. The key insight is that useEffect runs after the render, so we can capture the current value as the "previous" value for the next render cycle.
+
+This creates a one-render delay, which is exactly what we want for tracking previous values.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook } from "@testing-library/react";
+import { usePrevious } from "./usePrevious";
+
+describe("usePrevious", () => {
+  it("should return undefined on first render", () => {
+    const { result } = renderHook(() => usePrevious("initial"));
+
+    expect(result.current).toBeUndefined();
+  });
+
+  it("should return previous value on subsequent renders", () => {
+    const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
+      initialProps: { value: "first" },
+    });
+
+    expect(result.current).toBeUndefined();
+
+    rerender({ value: "second" });
+    expect(result.current).toBe("first");
+
+    rerender({ value: "third" });
+    expect(result.current).toBe("second");
+  });
+
+  it("should work with complex objects", () => {
+    const obj1 = { id: 1, name: "Object 1" };
+    const obj2 = { id: 2, name: "Object 2" };
+
+    const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
+      initialProps: { value: obj1 },
+    });
+
+    expect(result.current).toBeUndefined();
+
+    rerender({ value: obj2 });
+    expect(result.current).toBe(obj1);
+  });
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="When should I use usePrevious?">
+
+Use usePrevious when you need to:
+
+- Compare current vs previous values in effects
+- Implement undo/redo functionality
+- Optimize expensive operations
+- Track changes for analytics
+- Create smooth UI transitions
+
+</Accordion>
+
+<Accordion title="Can I track multiple previous values?">
+
+The basic hook only tracks one previous value. For multiple values, you could create a variant:
+
+```tsx
+function usePreviousArray<T>(value: T, count: number): T[] {
+  const ref = useRef<T[]>([]);
+
+  useEffect(() => {
+    ref.current = [value, ...ref.current.slice(0, count - 1)];
+  });
+
+  return ref.current.slice(1); // Exclude current value
+}
+```
+
+</Accordion>
+
+<Accordion title="Does this work with SSR?">
+
+Yes, usePrevious is SSR-safe. It uses useRef and useEffect, which work correctly during server-side rendering and hydration.
+
+</Accordion>
+
+<Accordion title="How is this different from useState?">
+
+usePrevious tracks the previous value automatically without manual state management:
+
+```tsx
+// Manual approach with useState
+const [current, setCurrent] = useState(initialValue);
+const [previous, setPrevious] = useState();
+
+const updateValue = (newValue) => {
+  setPrevious(current);
+  setCurrent(newValue);
+};
+
+// With usePrevious
+const [current, setCurrent] = useState(initialValue);
+const previous = usePrevious(current); // Automatic
+```
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useDebounce](../useDebounce) - Debounce value changes
+- [useLocalStorage](../useLocalStorage) - Persist previous values
+- [useTimeout](../useTimeout) - Delay operations based on changes
+
+## Changelog
+
+- **2.0.0** — Enhanced TypeScript support, improved documentation, added comprehensive examples and testing
+- **1.1.0** — Added proper TypeScript generics and better type inference
+- **1.0.0** — Initial release with basic previous value tracking functionality

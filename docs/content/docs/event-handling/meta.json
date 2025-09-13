@@ -1,4 +1,4 @@
 {
   "title": "Event Handling",
-  "pages": ["useClickOutside"]
+  "pages": ["useClickOutside", "useClipboard"]
 }

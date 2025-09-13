@@ -1,0 +1,1556 @@
+---
+title: useMobile
+description: Detect mobile devices and screen sizes with responsive breakpoints in React applications.
+tags: ["react", "hooks", "mobile", "responsive", "device", "screen"]
+status: stable
+version: 2.0.0
+lastUpdated: "2025-09-13"
+author: "OpenHooks Team"
+category: "device-and-browser"
+difficulty: beginner
+bundle_size: "~1.0kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Smartphone, Tablet, Monitor, Laptop } from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useMobile/Example";
+
+# useMobile
+
+> Detect mobile devices and screen sizes with responsive breakpoints in React applications.
+
+<MetaInfo
+  status="stable"
+  version="2.0.0"
+  bundleSize="~1.0kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```tsx
+import { useMobile } from "@/hooks/useMobile";
+
+function ResponsiveComponent() {
+  const {
+    isMobile,
+    isTablet,
+    isDesktop,
+    screenSize,
+    orientation,
+    touchScreen,
+    userAgent,
+  } = useMobile();
+
+  return (
+    <div>
+      <h2>Device Information</h2>
+      <p>Screen Size: {screenSize}</p>
+      <p>Is Mobile: {isMobile ? "Yes" : "No"}</p>
+      <p>Is Tablet: {isTablet ? "Yes" : "No"}</p>
+      <p>Is Desktop: {isDesktop ? "Yes" : "No"}</p>
+      <p>Orientation: {orientation}</p>
+      <p>Touch Screen: {touchScreen ? "Yes" : "No"}</p>
+
+      {isMobile && (
+        <div className="mobile-only">
+          <p>🚀 Mobile-specific content!</p>
+        </div>
+      )}
+
+      {isTablet && (
+        <div className="tablet-layout">
+          <p>📱 Tablet-optimized layout</p>
+        </div>
+      )}
+
+      {isDesktop && (
+        <div className="desktop-features">
+          <p>🖥️ Desktop features available</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```jsx
+import { useMobile } from "@/hooks/useMobile";
+
+function ResponsiveComponent() {
+  const {
+    isMobile,
+    isTablet,
+    isDesktop,
+    screenSize,
+    orientation,
+    touchScreen,
+    userAgent,
+  } = useMobile();
+
+  return (
+    <div>
+      <h2>Device Information</h2>
+      <p>Screen Size: {screenSize}</p>
+      <p>Is Mobile: {isMobile ? "Yes" : "No"}</p>
+      <p>Is Tablet: {isTablet ? "Yes" : "No"}</p>
+      <p>Is Desktop: {isDesktop ? "Yes" : "No"}</p>
+      <p>Orientation: {orientation}</p>
+      <p>Touch Screen: {touchScreen ? "Yes" : "No"}</p>
+
+      {isMobile && (
+        <div className="mobile-only">
+          <p>🚀 Mobile-specific content!</p>
+        </div>
+      )}
+
+      {isTablet && (
+        <div className="tablet-layout">
+          <p>📱 Tablet-optimized layout</p>
+        </div>
+      )}
+
+      {isDesktop && (
+        <div className="desktop-features">
+          <p>🖥️ Desktop features available</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+    <Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+      <Tab value="npm">
+
+```bash
+npx open-hook add useMobile
+```
+
+      </Tab>
+      <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useMobile
+```
+
+      </Tab>
+      <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useMobile
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+    <Callout type="info">
+      No external dependencies needed - just React 16.8+
+    </Callout>
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```ts title="hooks/useMobile.ts"
+import { useState, useEffect } from "react";
+
+type ScreenSize = "mobile" | "tablet" | "desktop" | "large";
+type Orientation = "portrait" | "landscape";
+
+interface DeviceInfo {
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+  isLarge: boolean;
+  screenSize: ScreenSize;
+  orientation: Orientation;
+  touchScreen: boolean;
+  userAgent: {
+    isIOS: boolean;
+    isAndroid: boolean;
+    isSafari: boolean;
+    isChrome: boolean;
+    isFirefox: boolean;
+    isEdge: boolean;
+  };
+  viewport: {
+    width: number;
+    height: number;
+  };
+}
+
+interface UseMobileOptions {
+  mobileBreakpoint?: number;
+  tabletBreakpoint?: number;
+  desktopBreakpoint?: number;
+}
+
+const defaultOptions: Required<UseMobileOptions> = {
+  mobileBreakpoint: 768,
+  tabletBreakpoint: 1024,
+  desktopBreakpoint: 1440,
+};
+
+export function useMobile(options: UseMobileOptions = {}): DeviceInfo {
+  const { mobileBreakpoint, tabletBreakpoint, desktopBreakpoint } = {
+    ...defaultOptions,
+    ...options,
+  };
+
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => {
+    if (typeof window === "undefined") {
+      return {
+        isMobile: false,
+        isTablet: false,
+        isDesktop: true,
+        isLarge: false,
+        screenSize: "desktop" as ScreenSize,
+        orientation: "landscape" as Orientation,
+        touchScreen: false,
+        userAgent: {
+          isIOS: false,
+          isAndroid: false,
+          isSafari: false,
+          isChrome: false,
+          isFirefox: false,
+          isEdge: false,
+        },
+        viewport: { width: 1024, height: 768 },
+      };
+    }
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const userAgent = navigator.userAgent;
+
+    const isMobile = width < mobileBreakpoint;
+    const isTablet = width >= mobileBreakpoint && width < tabletBreakpoint;
+    const isDesktop = width >= tabletBreakpoint && width < desktopBreakpoint;
+    const isLarge = width >= desktopBreakpoint;
+
+    const screenSize: ScreenSize = isMobile
+      ? "mobile"
+      : isTablet
+      ? "tablet"
+      : isLarge
+      ? "large"
+      : "desktop";
+
+    const orientation: Orientation = width > height ? "landscape" : "portrait";
+
+    const touchScreen =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    return {
+      isMobile,
+      isTablet,
+      isDesktop,
+      isLarge,
+      screenSize,
+      orientation,
+      touchScreen,
+      userAgent: {
+        isIOS: /iPad|iPhone|iPod/.test(userAgent),
+        isAndroid: /Android/.test(userAgent),
+        isSafari: /Safari/.test(userAgent) && !/Chrome/.test(userAgent),
+        isChrome: /Chrome/.test(userAgent),
+        isFirefox: /Firefox/.test(userAgent),
+        isEdge: /Edge|Edg/.test(userAgent),
+      },
+      viewport: { width, height },
+    };
+  });
+
+  useEffect(() => {
+    const updateDeviceInfo = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const userAgent = navigator.userAgent;
+
+      const isMobile = width < mobileBreakpoint;
+      const isTablet = width >= mobileBreakpoint && width < tabletBreakpoint;
+      const isDesktop = width >= tabletBreakpoint && width < desktopBreakpoint;
+      const isLarge = width >= desktopBreakpoint;
+
+      const screenSize: ScreenSize = isMobile
+        ? "mobile"
+        : isTablet
+        ? "tablet"
+        : isLarge
+        ? "large"
+        : "desktop";
+
+      const orientation: Orientation =
+        width > height ? "landscape" : "portrait";
+
+      const touchScreen =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+      setDeviceInfo({
+        isMobile,
+        isTablet,
+        isDesktop,
+        isLarge,
+        screenSize,
+        orientation,
+        touchScreen,
+        userAgent: {
+          isIOS: /iPad|iPhone|iPod/.test(userAgent),
+          isAndroid: /Android/.test(userAgent),
+          isSafari: /Safari/.test(userAgent) && !/Chrome/.test(userAgent),
+          isChrome: /Chrome/.test(userAgent),
+          isFirefox: /Firefox/.test(userAgent),
+          isEdge: /Edge|Edg/.test(userAgent),
+        },
+        viewport: { width, height },
+      });
+    };
+
+    // Update on window resize
+    window.addEventListener("resize", updateDeviceInfo);
+
+    // Update on orientation change
+    window.addEventListener("orientationchange", updateDeviceInfo);
+
+    // Initial update
+    updateDeviceInfo();
+
+    return () => {
+      window.removeEventListener("resize", updateDeviceInfo);
+      window.removeEventListener("orientationchange", updateDeviceInfo);
+    };
+  }, [mobileBreakpoint, tabletBreakpoint, desktopBreakpoint]);
+
+  return deviceInfo;
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```js title="hooks/useMobile.js"
+import { useState, useEffect } from "react";
+
+const defaultOptions = {
+  mobileBreakpoint: 768,
+  tabletBreakpoint: 1024,
+  desktopBreakpoint: 1440,
+};
+
+export function useMobile(options = {}) {
+  const { mobileBreakpoint, tabletBreakpoint, desktopBreakpoint } = {
+    ...defaultOptions,
+    ...options,
+  };
+
+  const [deviceInfo, setDeviceInfo] = useState(() => {
+    if (typeof window === "undefined") {
+      return {
+        isMobile: false,
+        isTablet: false,
+        isDesktop: true,
+        isLarge: false,
+        screenSize: "desktop",
+        orientation: "landscape",
+        touchScreen: false,
+        userAgent: {
+          isIOS: false,
+          isAndroid: false,
+          isSafari: false,
+          isChrome: false,
+          isFirefox: false,
+          isEdge: false,
+        },
+        viewport: { width: 1024, height: 768 },
+      };
+    }
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const userAgent = navigator.userAgent;
+
+    const isMobile = width < mobileBreakpoint;
+    const isTablet = width >= mobileBreakpoint && width < tabletBreakpoint;
+    const isDesktop = width >= tabletBreakpoint && width < desktopBreakpoint;
+    const isLarge = width >= desktopBreakpoint;
+
+    const screenSize = isMobile
+      ? "mobile"
+      : isTablet
+      ? "tablet"
+      : isLarge
+      ? "large"
+      : "desktop";
+
+    const orientation = width > height ? "landscape" : "portrait";
+
+    const touchScreen =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    return {
+      isMobile,
+      isTablet,
+      isDesktop,
+      isLarge,
+      screenSize,
+      orientation,
+      touchScreen,
+      userAgent: {
+        isIOS: /iPad|iPhone|iPod/.test(userAgent),
+        isAndroid: /Android/.test(userAgent),
+        isSafari: /Safari/.test(userAgent) && !/Chrome/.test(userAgent),
+        isChrome: /Chrome/.test(userAgent),
+        isFirefox: /Firefox/.test(userAgent),
+        isEdge: /Edge|Edg/.test(userAgent),
+      },
+      viewport: { width, height },
+    };
+  });
+
+  useEffect(() => {
+    const updateDeviceInfo = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const userAgent = navigator.userAgent;
+
+      const isMobile = width < mobileBreakpoint;
+      const isTablet = width >= mobileBreakpoint && width < tabletBreakpoint;
+      const isDesktop = width >= tabletBreakpoint && width < desktopBreakpoint;
+      const isLarge = width >= desktopBreakpoint;
+
+      const screenSize = isMobile
+        ? "mobile"
+        : isTablet
+        ? "tablet"
+        : isLarge
+        ? "large"
+        : "desktop";
+
+      const orientation = width > height ? "landscape" : "portrait";
+
+      const touchScreen =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+      setDeviceInfo({
+        isMobile,
+        isTablet,
+        isDesktop,
+        isLarge,
+        screenSize,
+        orientation,
+        touchScreen,
+        userAgent: {
+          isIOS: /iPad|iPhone|iPod/.test(userAgent),
+          isAndroid: /Android/.test(userAgent),
+          isSafari: /Safari/.test(userAgent) && !/Chrome/.test(userAgent),
+          isChrome: /Chrome/.test(userAgent),
+          isFirefox: /Firefox/.test(userAgent),
+          isEdge: /Edge|Edg/.test(userAgent),
+        },
+        viewport: { width, height },
+      });
+    };
+
+    // Update on window resize
+    window.addEventListener("resize", updateDeviceInfo);
+
+    // Update on orientation change
+    window.addEventListener("orientationchange", updateDeviceInfo);
+
+    // Initial update
+    updateDeviceInfo();
+
+    return () => {
+      window.removeEventListener("resize", updateDeviceInfo);
+      window.removeEventListener("orientationchange", updateDeviceInfo);
+    };
+  }, [mobileBreakpoint, tabletBreakpoint, desktopBreakpoint]);
+
+  return deviceInfo;
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    options: {
+      type: "UseMobileOptions",
+      description: "Configuration object for breakpoints",
+      default:
+        "{ mobileBreakpoint: 768, tabletBreakpoint: 1024, desktopBreakpoint: 1440 }",
+    },
+    "options.mobileBreakpoint": {
+      type: "number",
+      description: "Width below which device is considered mobile (px)",
+      default: "768",
+    },
+    "options.tabletBreakpoint": {
+      type: "number",
+      description: "Width above which device is considered tablet (px)",
+      default: "1024",
+    },
+    "options.desktopBreakpoint": {
+      type: "number",
+      description: "Width above which device is considered large desktop (px)",
+      default: "1440",
+    },
+  }}
+/>
+
+### Returns
+
+<TypeTable
+  type={{
+    isMobile: {
+      type: "boolean",
+      description: "True if screen width is below mobile breakpoint",
+    },
+    isTablet: {
+      type: "boolean",
+      description:
+        "True if screen width is between mobile and tablet breakpoints",
+    },
+    isDesktop: {
+      type: "boolean",
+      description:
+        "True if screen width is between tablet and desktop breakpoints",
+    },
+    isLarge: {
+      type: "boolean",
+      description: "True if screen width is above desktop breakpoint",
+    },
+    screenSize: {
+      type: "'mobile' | 'tablet' | 'desktop' | 'large'",
+      description: "Current screen size category",
+    },
+    orientation: {
+      type: "'portrait' | 'landscape'",
+      description: "Current screen orientation",
+    },
+    touchScreen: {
+      type: "boolean",
+      description: "True if device supports touch input",
+    },
+    userAgent: {
+      type: "UserAgentInfo",
+      description: "Detected browser and platform information",
+    },
+    viewport: {
+      type: "{ width: number; height: number }",
+      description: "Current viewport dimensions",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+type ScreenSize = "mobile" | "tablet" | "desktop" | "large";
+type Orientation = "portrait" | "landscape";
+
+interface DeviceInfo {
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+  isLarge: boolean;
+  screenSize: ScreenSize;
+  orientation: Orientation;
+  touchScreen: boolean;
+  userAgent: {
+    isIOS: boolean;
+    isAndroid: boolean;
+    isSafari: boolean;
+    isChrome: boolean;
+    isFirefox: boolean;
+    isEdge: boolean;
+  };
+  viewport: {
+    width: number;
+    height: number;
+  };
+}
+
+interface UseMobileOptions {
+  mobileBreakpoint?: number;
+  tabletBreakpoint?: number;
+  desktopBreakpoint?: number;
+}
+
+function useMobile(options?: UseMobileOptions): DeviceInfo;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["Responsive Layout", "Touch Interactions", "Platform Features", "Performance Optimization"]}>
+  <Tab value="Responsive Layout">
+
+```tsx
+function ResponsiveNavigation() {
+  const { isMobile, isTablet, screenSize, orientation } = useMobile();
+
+  const getLayoutConfig = () => {
+    switch (screenSize) {
+      case "mobile":
+        return {
+          showSidebar: false,
+          itemsPerRow: 1,
+          showSearch: false,
+          navigationStyle: "bottom-tabs",
+        };
+      case "tablet":
+        return {
+          showSidebar: orientation === "landscape",
+          itemsPerRow: orientation === "portrait" ? 2 : 3,
+          showSearch: true,
+          navigationStyle: "top-bar",
+        };
+      case "desktop":
+      case "large":
+        return {
+          showSidebar: true,
+          itemsPerRow: 4,
+          showSearch: true,
+          navigationStyle: "sidebar",
+        };
+    }
+  };
+
+  const layout = getLayoutConfig();
+
+  return (
+    <div className={`app-layout ${screenSize}`}>
+      {layout.showSidebar && (
+        <aside className="sidebar">
+          <NavigationSidebar />
+        </aside>
+      )}
+
+      <main className="main-content">
+        {layout.showSearch && (
+          <header className="search-header">
+            <SearchBar expanded={!isMobile} />
+          </header>
+        )}
+
+        <div
+          className="content-grid"
+          style={{
+            gridTemplateColumns: `repeat(${layout.itemsPerRow}, 1fr)`,
+          }}
+        >
+          <ContentItems />
+        </div>
+      </main>
+
+      {layout.navigationStyle === "bottom-tabs" && (
+        <nav className="bottom-navigation">
+          <BottomTabs />
+        </nav>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Touch Interactions">
+
+```tsx
+function InteractiveComponent() {
+  const { touchScreen, isMobile, userAgent } = useMobile();
+  const [interactionMode, setInteractionMode] = useState("auto");
+
+  // Adapt interaction patterns based on device
+  const getInteractionProps = () => {
+    if (touchScreen) {
+      return {
+        // Touch-friendly props
+        onTouchStart: handleTouchStart,
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
+        // Larger touch targets
+        className: "touch-target-large",
+        // Prevent hover states on touch devices
+        style: { "--hover-enabled": "none" },
+      };
+    } else {
+      return {
+        // Mouse interaction props
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave,
+        onClick: handleClick,
+        onDoubleClick: handleDoubleClick,
+        className: "hover-enabled",
+      };
+    }
+  };
+
+  const handleGesture = (gesture: string) => {
+    if (touchScreen && isMobile) {
+      switch (gesture) {
+        case "swipe-left":
+          navigateNext();
+          break;
+        case "swipe-right":
+          navigatePrevious();
+          break;
+        case "pinch-zoom":
+          toggleZoom();
+          break;
+        case "long-press":
+          showContextMenu();
+          break;
+      }
+    }
+  };
+
+  return (
+    <div className="interactive-component">
+      <div {...getInteractionProps()}>
+        <h3>Interactive Content</h3>
+
+        {touchScreen ? (
+          <div className="touch-instructions">
+            <p>👆 Touch interactions available:</p>
+            <ul>
+              <li>Swipe left/right to navigate</li>
+              <li>Pinch to zoom</li>
+              <li>Long press for context menu</li>
+            </ul>
+          </div>
+        ) : (
+          <div className="mouse-instructions">
+            <p>🖱️ Mouse interactions available:</p>
+            <ul>
+              <li>Hover for preview</li>
+              <li>Click to select</li>
+              <li>Double-click to open</li>
+            </ul>
+          </div>
+        )}
+
+        {/* iOS-specific features */}
+        {userAgent.isIOS && (
+          <div className="ios-features">
+            <button onClick={() => addToHomeScreen()}>
+              📱 Add to Home Screen
+            </button>
+          </div>
+        )}
+
+        {/* Android-specific features */}
+        {userAgent.isAndroid && (
+          <div className="android-features">
+            <button onClick={() => requestInstallPrompt()}>
+              📲 Install App
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Platform Features">
+
+```tsx
+function PlatformOptimizedApp() {
+  const { userAgent, isMobile, touchScreen, viewport } = useMobile();
+
+  const getPlatformFeatures = () => {
+    const features = {
+      notifications: "Notification" in window,
+      geolocation: "geolocation" in navigator,
+      camera: "mediaDevices" in navigator,
+      fullscreen: "requestFullscreen" in document.documentElement,
+      sharing: "share" in navigator,
+      orientation: "orientation" in screen,
+      vibration: "vibrate" in navigator,
+    };
+
+    return features;
+  };
+
+  const features = getPlatformFeatures();
+
+  const optimizeForPlatform = () => {
+    // iOS-specific optimizations
+    if (userAgent.isIOS) {
+      // Handle iOS viewport quirks
+      if (viewport.height < 500) {
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${viewport.height * 0.01}px`
+        );
+      }
+
+      // iOS Safari bounce prevention
+      document.body.style.overscrollBehavior = "none";
+    }
+
+    // Android-specific optimizations
+    if (userAgent.isAndroid) {
+      // Android keyboard handling
+      if (isMobile) {
+        const originalHeight = viewport.height;
+        const onResize = () => {
+          const currentHeight = window.innerHeight;
+          const keyboardHeight = originalHeight - currentHeight;
+          if (keyboardHeight > 150) {
+            document.body.classList.add("keyboard-open");
+          } else {
+            document.body.classList.remove("keyboard-open");
+          }
+        };
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+      }
+    }
+
+    // Safari-specific optimizations
+    if (userAgent.isSafari) {
+      // Handle Safari's aggressive memory management
+      const images = document.querySelectorAll("img");
+      images.forEach((img) => {
+        img.loading = "lazy";
+      });
+    }
+  };
+
+  useEffect(() => {
+    const cleanup = optimizeForPlatform();
+    return cleanup;
+  }, [userAgent, viewport]);
+
+  return (
+    <div className="platform-optimized-app">
+      <header>
+        <h1>Platform Features</h1>
+        <div className="platform-info">
+          <span className="platform-badge">
+            {userAgent.isIOS && "🍎 iOS"}
+            {userAgent.isAndroid && "🤖 Android"}
+            {!userAgent.isIOS && !userAgent.isAndroid && "💻 Desktop"}
+          </span>
+        </div>
+      </header>
+
+      <main>
+        <section className="feature-grid">
+          {features.notifications && (
+            <FeatureCard
+              icon="🔔"
+              title="Push Notifications"
+              available={features.notifications}
+              onEnable={() => requestNotificationPermission()}
+            />
+          )}
+
+          {features.geolocation && (
+            <FeatureCard
+              icon="📍"
+              title="Location Services"
+              available={features.geolocation}
+              onEnable={() => getCurrentLocation()}
+            />
+          )}
+
+          {features.camera && isMobile && (
+            <FeatureCard
+              icon="📷"
+              title="Camera Access"
+              available={features.camera}
+              onEnable={() => accessCamera()}
+            />
+          )}
+
+          {features.sharing && (
+            <FeatureCard
+              icon="📤"
+              title="Native Sharing"
+              available={features.sharing}
+              onEnable={() => shareContent()}
+            />
+          )}
+
+          {features.vibration && touchScreen && (
+            <FeatureCard
+              icon="📳"
+              title="Haptic Feedback"
+              available={features.vibration}
+              onEnable={() => navigator.vibrate(200)}
+            />
+          )}
+        </section>
+
+        {/* Platform-specific UI elements */}
+        {userAgent.isIOS && (
+          <div className="ios-ui">
+            <button className="ios-button">iOS Style Button</button>
+          </div>
+        )}
+
+        {userAgent.isAndroid && (
+          <div className="material-ui">
+            <button className="material-button">Material Button</button>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Performance Optimization">
+
+```tsx
+function PerformanceOptimizedComponent() {
+  const { isMobile, isTablet, viewport, screenSize } = useMobile();
+
+  // Adjust performance based on device capabilities
+  const getPerformanceConfig = () => {
+    const baseConfig = {
+      imageQuality: 90,
+      animationDuration: 300,
+      maxConcurrentRequests: 6,
+      lazyLoadThreshold: 100,
+      prefetchCount: 3,
+    };
+
+    if (isMobile) {
+      return {
+        ...baseConfig,
+        imageQuality: 70, // Lower quality for mobile
+        animationDuration: 200, // Faster animations
+        maxConcurrentRequests: 3, // Fewer concurrent requests
+        lazyLoadThreshold: 50, // More aggressive lazy loading
+        prefetchCount: 1, // Less prefetching
+      };
+    }
+
+    if (isTablet) {
+      return {
+        ...baseConfig,
+        imageQuality: 80,
+        maxConcurrentRequests: 4,
+        prefetchCount: 2,
+      };
+    }
+
+    return baseConfig;
+  };
+
+  const config = getPerformanceConfig();
+
+  // Responsive image loading
+  const getImageSrc = (baseUrl: string, size: string) => {
+    const sizeMap = {
+      mobile: "small",
+      tablet: "medium",
+      desktop: "large",
+      large: "xlarge",
+    };
+
+    const targetSize = sizeMap[screenSize];
+    return `${baseUrl}?size=${targetSize}&quality=${config.imageQuality}`;
+  };
+
+  // Conditional feature loading
+  const shouldLoadFeature = (feature: string) => {
+    const heavyFeatures = ["3d-animations", "video-background", "particles"];
+
+    if (isMobile && heavyFeatures.includes(feature)) {
+      return false; // Skip heavy features on mobile
+    }
+
+    return true;
+  };
+
+  // Memory-aware component rendering
+  const getComponentLimit = () => {
+    if (isMobile) return 10;
+    if (isTablet) return 20;
+    return 50;
+  };
+
+  return (
+    <div className="performance-optimized">
+      <div className="content-grid">
+        {/* Responsive images */}
+        <img
+          src={getImageSrc("/api/image/hero", "large")}
+          alt="Hero image"
+          loading="lazy"
+          style={{
+            maxWidth: "100%",
+            height: "auto",
+          }}
+        />
+
+        {/* Conditional heavy components */}
+        {shouldLoadFeature("3d-animations") && (
+          <Suspense fallback={<div>Loading 3D content...</div>}>
+            <Heavy3DComponent />
+          </Suspense>
+        )}
+
+        {shouldLoadFeature("video-background") ? (
+          <VideoBackground quality={isMobile ? "low" : "high"} />
+        ) : (
+          <StaticBackground />
+        )}
+
+        {/* Performance metrics display */}
+        <div className="performance-info">
+          <h3>Performance Configuration</h3>
+          <ul>
+            <li>Device: {screenSize}</li>
+            <li>Image Quality: {config.imageQuality}%</li>
+            <li>Animation Duration: {config.animationDuration}ms</li>
+            <li>Max Requests: {config.maxConcurrentRequests}</li>
+            <li>Component Limit: {getComponentLimit()}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Example of memory-efficient list rendering
+function OptimizedList({ items }: { items: any[] }) {
+  const { isMobile } = useMobile();
+  const [visibleItems, setVisibleItems] = useState(isMobile ? 10 : 50);
+
+  const loadMore = () => {
+    setVisibleItems((prev) => prev + (isMobile ? 10 : 20));
+  };
+
+  return (
+    <div className="optimized-list">
+      {items.slice(0, visibleItems).map((item, index) => (
+        <ListItem key={item.id} item={item} />
+      ))}
+
+      {visibleItems < items.length && (
+        <button onClick={loadMore} className="load-more">
+          Load More ({items.length - visibleItems} remaining)
+        </button>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Use device detection to enhance user experience, not restrict it:
+
+```tsx
+const { isMobile, touchScreen, userAgent } = useMobile();
+
+// ✅ Good: Progressive enhancement
+const Component = () => (
+  <div>
+    <BaseFeatures />
+    {!isMobile && <DesktopEnhancements />}
+    {touchScreen && <TouchGestures />}
+    {userAgent.isIOS && <iOSOptimizations />}
+  </div>
+);
+
+// ❌ Avoid: Feature blocking
+const BadComponent = () => (
+  <div>
+    {isMobile ? <p>Feature not available on mobile</p> : <FullFeatureSet />}
+  </div>
+);
+```
+
+</Callout>
+
+### Responsive Design Guidelines
+
+- **📱 Mobile First**: Design for mobile, enhance for larger screens
+- **🎯 Touch Targets**: Use appropriate touch target sizes (44px minimum)
+- **⚡ Performance**: Optimize images and animations for mobile devices
+- **🔄 Orientation**: Handle orientation changes gracefully
+
+### Do's and Don'ts
+
+- ✅ Use device detection for progressive enhancement
+- ✅ Optimize performance based on device capabilities
+- ✅ Provide appropriate touch targets and interactions
+- ✅ Test on real devices, not just browser dev tools
+- ❌ Don't block features completely on mobile
+- ❌ Avoid device-specific code without fallbacks
+- ❌ Don't assume mobile means slow internet
+- ❌ Avoid hard-coded breakpoints without customization
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~1.0kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Detection Speed",
+      value: "< 1ms",
+      description: "Initial device detection",
+    },
+    {
+      metric: "Memory Usage",
+      value: "Minimal",
+      description: "Single state object",
+    },
+    {
+      metric: "Event Listeners",
+      value: "2",
+      description: "resize + orientationchange",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome 4+", supported: true, notes: "Full support" },
+    { name: "Firefox 3.5+", supported: true, notes: "Full support" },
+    { name: "Safari 3.1+", supported: true, notes: "Full support" },
+    { name: "Edge 12+", supported: true, notes: "Full support" },
+    { name: "IE 9+", supported: true, notes: "Limited touch detection" },
+    {
+      name: "Mobile Safari",
+      supported: true,
+      notes: "Excellent mobile support",
+    },
+    {
+      name: "Chrome Mobile",
+      supported: true,
+      notes: "Excellent mobile support",
+    },
+  ]}
+/>
+
+## Use Cases
+
+### <Smartphone className="inline w-4 h-4 mr-2" /> Responsive Design
+
+Adapt layouts and features based on screen size and device capabilities.
+
+### <Tablet className="inline w-4 h-4 mr-2" /> Touch Optimization
+
+Provide appropriate touch targets and gestures for touch-enabled devices.
+
+### <Monitor className="inline w-4 h-4 mr-2" /> Performance Tuning
+
+Optimize application performance based on device constraints and capabilities.
+
+### <Laptop className="inline w-4 h-4 mr-2" /> Platform Features
+
+Enable platform-specific features and optimizations for better user experience.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - Ensure touch targets are at least 44px for mobile accessibility - Provide
+  keyboard navigation alternatives for touch gestures - Use appropriate font
+  sizes and contrast ratios for all screen sizes - Test with screen readers on
+  different devices - Consider reduced motion preferences for animations
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Device detection not working correctly">
+
+**Solution:** Check if you're detecting the right user agent patterns:
+
+```tsx
+// More comprehensive user agent detection
+const getUserAgent = () => {
+  const ua = navigator.userAgent;
+  return {
+    isIOS: /iPad|iPhone|iPod/.test(ua) && !window.MSStream,
+    isAndroid: /Android/.test(ua),
+    isSafari: /Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS/.test(ua),
+    isChrome: /Chrome|Chromium|CriOS/.test(ua),
+    isFirefox: /Firefox|FxiOS/.test(ua),
+    isEdge: /Edg/.test(ua),
+  };
+};
+```
+
+</Accordion>
+
+<Accordion title="Touch detection failing on some devices">
+
+**Solution:** Use multiple methods to detect touch capability:
+
+```tsx
+const detectTouch = () => {
+  return (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    // @ts-ignore - for older browsers
+    navigator.msMaxTouchPoints > 0
+  );
+};
+```
+
+</Accordion>
+
+<Accordion title="Performance issues with frequent resize events">
+
+**Solution:** Debounce resize event handling:
+
+```tsx
+const useDebouncedResize = (callback: () => void, delay: number = 250) => {
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(callback, delay);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, [callback, delay]);
+};
+```
+
+</Accordion>
+
+<Accordion title="SSR hydration mismatches">
+
+**Solution:** Handle server-side rendering properly:
+
+```tsx
+const useMobileSSR = () => {
+  const [hasMounted, setHasMounted] = useState(false);
+  const deviceInfo = useMobile();
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Return default values during SSR
+  if (!hasMounted) {
+    return {
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      // ... other default values
+    };
+  }
+
+  return deviceInfo;
+};
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook combines multiple detection methods:
+1. **Screen width analysis** using configurable breakpoints
+2. **User agent parsing** for platform-specific detection
+3. **Touch capability detection** using multiple browser APIs
+4. **Orientation tracking** based on viewport dimensions
+5. **Real-time updates** via resize and orientation change events
+
+The implementation prioritizes accuracy and performance while providing comprehensive device information.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook, act } from "@testing-library/react";
+import { useMobile } from "./useMobile";
+
+// Mock window properties
+const mockWindow = (width: number, height: number, userAgent: string) => {
+  Object.defineProperty(window, "innerWidth", {
+    writable: true,
+    configurable: true,
+    value: width,
+  });
+
+  Object.defineProperty(window, "innerHeight", {
+    writable: true,
+    configurable: true,
+    value: height,
+  });
+
+  Object.defineProperty(navigator, "userAgent", {
+    writable: true,
+    configurable: true,
+    value: userAgent,
+  });
+};
+
+describe("useMobile", () => {
+  beforeEach(() => {
+    // Reset to default desktop state
+    mockWindow(1024, 768, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+  });
+
+  it("should detect mobile devices", () => {
+    mockWindow(320, 568, "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0)");
+
+    const { result } = renderHook(() => useMobile());
+
+    expect(result.current.isMobile).toBe(true);
+    expect(result.current.isTablet).toBe(false);
+    expect(result.current.isDesktop).toBe(false);
+    expect(result.current.screenSize).toBe("mobile");
+    expect(result.current.userAgent.isIOS).toBe(true);
+  });
+
+  it("should detect tablet devices", () => {
+    mockWindow(768, 1024, "Mozilla/5.0 (iPad; CPU OS 14_0)");
+
+    const { result } = renderHook(() => useMobile());
+
+    expect(result.current.isMobile).toBe(false);
+    expect(result.current.isTablet).toBe(true);
+    expect(result.current.isDesktop).toBe(false);
+    expect(result.current.screenSize).toBe("tablet");
+  });
+
+  it("should detect desktop devices", () => {
+    mockWindow(1200, 800, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+
+    const { result } = renderHook(() => useMobile());
+
+    expect(result.current.isMobile).toBe(false);
+    expect(result.current.isTablet).toBe(false);
+    expect(result.current.isDesktop).toBe(true);
+    expect(result.current.screenSize).toBe("desktop");
+  });
+
+  it("should update on window resize", () => {
+    const { result } = renderHook(() => useMobile());
+
+    expect(result.current.isMobile).toBe(false);
+
+    act(() => {
+      mockWindow(320, 568, navigator.userAgent);
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    expect(result.current.isMobile).toBe(true);
+  });
+
+  it("should detect orientation changes", () => {
+    mockWindow(320, 568, "Mobile User Agent");
+
+    const { result } = renderHook(() => useMobile());
+
+    expect(result.current.orientation).toBe("portrait");
+
+    act(() => {
+      mockWindow(568, 320, "Mobile User Agent");
+      window.dispatchEvent(new Event("orientationchange"));
+    });
+
+    expect(result.current.orientation).toBe("landscape");
+  });
+
+  it("should accept custom breakpoints", () => {
+    mockWindow(800, 600, "Desktop User Agent");
+
+    const { result } = renderHook(() =>
+      useMobile({
+        mobileBreakpoint: 600,
+        tabletBreakpoint: 900,
+      })
+    );
+
+    expect(result.current.isTablet).toBe(true);
+    expect(result.current.isMobile).toBe(false);
+  });
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="Should I use this instead of CSS media queries?">
+
+No, use both! CSS media queries handle styling, while this hook handles JavaScript logic and component behavior. They complement each other:
+
+```tsx
+// CSS for styling
+@media (max-width: 768px) {
+  .component { font-size: 14px; }
+}
+
+// Hook for behavior
+const { isMobile } = useMobile();
+if (isMobile) {
+  // Enable touch gestures, reduce animations, etc.
+}
+```
+
+</Accordion>
+
+<Accordion title="How accurate is user agent detection?">
+
+User agent detection is reasonably accurate but can be spoofed. Use it for enhancement, not security:
+
+```tsx
+const { userAgent } = useMobile();
+
+// ✅ Good: Feature enhancement
+if (userAgent.isIOS) {
+  addIOSSpecificStyles();
+}
+
+// ❌ Bad: Security decisions
+if (userAgent.isIOS) {
+  allowAccess(); // Never do this!
+}
+```
+
+</Accordion>
+
+<Accordion title="Can I customize the breakpoints for different design systems?">
+
+Yes! The hook accepts custom breakpoints to match your design system:
+
+```tsx
+// Tailwind CSS breakpoints
+const tailwindBreakpoints = {
+  mobileBreakpoint: 640, // sm
+  tabletBreakpoint: 1024, // lg
+  desktopBreakpoint: 1536, // 2xl
+};
+
+// Bootstrap breakpoints
+const bootstrapBreakpoints = {
+  mobileBreakpoint: 576, // sm
+  tabletBreakpoint: 992, // lg
+  desktopBreakpoint: 1400, // xxl
+};
+
+const device = useMobile(tailwindBreakpoints);
+```
+
+</Accordion>
+
+<Accordion title="How do I handle device orientation locks?">
+
+You can detect orientation locks and provide appropriate UX:
+
+```tsx
+const { orientation, viewport } = useMobile();
+
+useEffect(() => {
+  if (screen.orientation) {
+    const handleOrientationChange = () => {
+      // Handle orientation lock/unlock
+      if (screen.orientation.angle === 0) {
+        // Portrait locked
+        showOrientationMessage("Please rotate to landscape");
+      }
+    };
+
+    screen.orientation.addEventListener("change", handleOrientationChange);
+    return () =>
+      screen.orientation.removeEventListener("change", handleOrientationChange);
+  }
+}, []);
+```
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useLocation](../useLocation) - Browser navigation and URL management
+- [useLocalStorage](../useLocalStorage) - Store device preferences
+- [useClickOutside](../useClickOutside) - Handle touch interactions
+
+## Changelog
+
+- **2.0.0** — Enhanced TypeScript support, comprehensive user agent detection, improved performance, orientation tracking, custom breakpoints
+- **1.3.0** — Added viewport dimensions and orientation detection
+- **1.2.0** — Improved user agent parsing and touch detection
+- **1.1.0** — Added custom breakpoint support
+- **1.0.0** — Initial release with basic mobile detection

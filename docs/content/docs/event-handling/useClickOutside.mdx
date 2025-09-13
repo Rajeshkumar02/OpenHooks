@@ -19,6 +19,7 @@ import {
   TabsList as ShadcnTabsList,
   TabsTrigger as ShadcnTabsTrigger,
 } from "@/components/ui/tabs";
+import { Square, List, Search, PanelLeft } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Callout } from "fumadocs-ui/components/callout";
 import { TypeTable } from "fumadocs-ui/components/type-table";
@@ -337,19 +338,19 @@ useClickOutside(modalRef, handleClose);
 
 ## Use Cases
 
-### 🎯 Modal Dialogs
+### <Square className="inline w-4 h-4 mr-2" /> Modal Dialogs
 
 Perfect for closing modals when users click outside the modal area.
 
-### 📋 Dropdown Menus
+### <List className="inline w-4 h-4 mr-2" /> Dropdown Menus
 
 Close dropdown menus when clicking elsewhere on the page.
 
-### 🔍 Search Suggestions
+### <Search className="inline w-4 h-4 mr-2" /> Search Suggestions
 
 Hide search suggestion panels when clicking outside the search box.
 
-### 📱 Mobile Sidebars
+### <PanelLeft className="inline w-4 h-4 mr-2" /> Mobile Sidebars
 
 Collapse navigation sidebars on mobile when tapping outside.
 

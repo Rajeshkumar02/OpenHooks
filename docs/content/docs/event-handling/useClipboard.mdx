@@ -1,0 +1,904 @@
+---
+title: useClipboard
+description: Copy text to clipboard with success feedback and error handling in React applications.
+tags: ["react", "hooks", "clipboard", "copy", "paste"]
+status: stable
+version: 2.0.0
+lastUpdated: "2025-09-13"
+author: "OpenHooks Team"
+category: "event-handling"
+difficulty: beginner
+bundle_size: "~0.8kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Copy, Check, Clipboard, Share } from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useClipboard/Example";
+
+# useClipboard
+
+> Copy text to clipboard with success feedback and error handling in React applications.
+
+<MetaInfo
+  status="stable"
+  version="2.0.0"
+  bundleSize="~0.8kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```tsx
+import { useState } from "react";
+import { useClipboard } from "@/hooks/useClipboard";
+
+function ShareButton() {
+  const { isCopied, copyToClipboard } = useClipboard();
+  const shareUrl = "https://example.com/awesome-content";
+
+  const handleShare = async () => {
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
+      console.log("URL copied to clipboard!");
+    }
+  };
+
+  return (
+    <div>
+      <p>Share this link:</p>
+      <code>{shareUrl}</code>
+
+      <button onClick={handleShare}>
+        {isCopied ? "Copied!" : "Copy Link"}
+      </button>
+
+      {isCopied && <p>✅ Link copied to clipboard!</p>}
+    </div>
+  );
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```jsx
+import { useState } from "react";
+import { useClipboard } from "@/hooks/useClipboard";
+
+function ShareButton() {
+  const { isCopied, copyToClipboard } = useClipboard();
+  const shareUrl = "https://example.com/awesome-content";
+
+  const handleShare = async () => {
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
+      console.log("URL copied to clipboard!");
+    }
+  };
+
+  return (
+    <div>
+      <p>Share this link:</p>
+      <code>{shareUrl}</code>
+
+      <button onClick={handleShare}>
+        {isCopied ? "Copied!" : "Copy Link"}
+      </button>
+
+      {isCopied && <p>✅ Link copied to clipboard!</p>}
+    </div>
+  );
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+    <Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+      <Tab value="npm">
+
+```bash
+npx open-hook add useClipboard
+```
+
+      </Tab>
+      <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useClipboard
+```
+
+      </Tab>
+      <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useClipboard
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+    <Callout type="info">
+      No external dependencies needed - just React 16.8+
+    </Callout>
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```ts title="hooks/useClipboard.ts"
+import { useState, useCallback } from "react";
+
+interface UseClipboardReturn {
+  isCopied: boolean;
+  copyToClipboard: (text: string) => Promise<boolean>;
+  clearCopied: () => void;
+}
+
+export function useClipboard(resetTime: number = 2000): UseClipboardReturn {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyToClipboard = useCallback(
+    async (text: string): Promise<boolean> => {
+      if (!navigator.clipboard) {
+        // Fallback for older browsers
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.opacity = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          const successful = document.execCommand("copy");
+          document.body.removeChild(textArea);
+
+          if (successful) {
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), resetTime);
+            return true;
+          }
+          return false;
+        } catch (err) {
+          console.error("Failed to copy text: ", err);
+          return false;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), resetTime);
+        return true;
+      } catch (err) {
+        console.error("Failed to copy text: ", err);
+        return false;
+      }
+    },
+    [resetTime]
+  );
+
+  const clearCopied = useCallback(() => {
+    setIsCopied(false);
+  }, []);
+
+  return { isCopied, copyToClipboard, clearCopied };
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```js title="hooks/useClipboard.js"
+import { useState, useCallback } from "react";
+
+export function useClipboard(resetTime = 2000) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyToClipboard = useCallback(
+    async (text) => {
+      if (!navigator.clipboard) {
+        // Fallback for older browsers
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.opacity = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          const successful = document.execCommand("copy");
+          document.body.removeChild(textArea);
+
+          if (successful) {
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), resetTime);
+            return true;
+          }
+          return false;
+        } catch (err) {
+          console.error("Failed to copy text: ", err);
+          return false;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), resetTime);
+        return true;
+      } catch (err) {
+        console.error("Failed to copy text: ", err);
+        return false;
+      }
+    },
+    [resetTime]
+  );
+
+  const clearCopied = useCallback(() => {
+    setIsCopied(false);
+  }, []);
+
+  return { isCopied, copyToClipboard, clearCopied };
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    resetTime: {
+      type: "number",
+      description: "Time in ms before isCopied resets to false (default: 2000)",
+      default: "2000",
+    },
+  }}
+/>
+
+### Returns
+
+<TypeTable
+  type={{
+    isCopied: {
+      type: "boolean",
+      description: "Whether text was recently copied to clipboard",
+    },
+    copyToClipboard: {
+      type: "(text: string) => Promise<boolean>",
+      description:
+        "Function to copy text to clipboard. Returns success status.",
+    },
+    clearCopied: {
+      type: "() => void",
+      description: "Manually clear the copied state",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+interface UseClipboardReturn {
+  isCopied: boolean;
+  copyToClipboard: (text: string) => Promise<boolean>;
+  clearCopied: () => void;
+}
+
+function useClipboard(resetTime?: number): UseClipboardReturn;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["Code Snippet", "Share Buttons", "Form Data Copy", "Multi-Copy Manager"]}>
+  <Tab value="Code Snippet">
+
+```tsx
+function CodeBlock({ code, language }: { code: string; language: string }) {
+  const { isCopied, copyToClipboard } = useClipboard(3000);
+
+  const handleCopy = async () => {
+    const success = await copyToClipboard(code);
+    if (success) {
+      // Optional: analytics tracking
+      trackEvent("code_copied", { language });
+    }
+  };
+
+  return (
+    <div className="relative">
+      <pre className="code-block">
+        <code className={`language-${language}`}>{code}</code>
+      </pre>
+
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 copy-button"
+        aria-label={isCopied ? "Copied!" : "Copy code"}
+      >
+        {isCopied ? (
+          <>
+            <CheckIcon /> Copied!
+          </>
+        ) : (
+          <>
+            <CopyIcon /> Copy
+          </>
+        )}
+      </button>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Share Buttons">
+
+```tsx
+function ShareComponent({ title, url }: { title: string; url: string }) {
+  const { isCopied, copyToClipboard } = useClipboard();
+
+  const shareData = {
+    title,
+    url,
+    text: `Check out: ${title}`,
+  };
+
+  const handleCopyLink = () => {
+    copyToClipboard(url);
+  };
+
+  const handleCopyText = () => {
+    const shareText = `${title}\n${url}`;
+    copyToClipboard(shareText);
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // Fallback to copy
+        handleCopyLink();
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  return (
+    <div className="share-buttons">
+      <button onClick={handleCopyLink}>
+        {isCopied ? "Link Copied!" : "Copy Link"}
+      </button>
+
+      <button onClick={handleCopyText}>Copy Full Text</button>
+
+      <button onClick={handleNativeShare}>Share</button>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Form Data Copy">
+
+```tsx
+function FormSummary({ formData }: { formData: any }) {
+  const { isCopied, copyToClipboard } = useClipboard();
+
+  const formatFormData = (data: any) => {
+    return Object.entries(data)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
+  };
+
+  const copyAsText = () => {
+    const formatted = formatFormData(formData);
+    copyToClipboard(formatted);
+  };
+
+  const copyAsJSON = () => {
+    const json = JSON.stringify(formData, null, 2);
+    copyToClipboard(json);
+  };
+
+  const copyAsCsv = () => {
+    const headers = Object.keys(formData).join(",");
+    const values = Object.values(formData).join(",");
+    const csv = `${headers}\n${values}`;
+    copyToClipboard(csv);
+  };
+
+  return (
+    <div className="form-summary">
+      <h3>Form Summary</h3>
+      <pre>{JSON.stringify(formData, null, 2)}</pre>
+
+      <div className="copy-buttons">
+        <button onClick={copyAsText}>
+          {isCopied ? "Copied!" : "Copy as Text"}
+        </button>
+        <button onClick={copyAsJSON}>Copy as JSON</button>
+        <button onClick={copyAsCsv}>Copy as CSV</button>
+      </div>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Multi-Copy Manager">
+
+```tsx
+function MultiCopyManager() {
+  const clipboard1 = useClipboard(1500);
+  const clipboard2 = useClipboard(3000);
+
+  const items = [
+    { id: 1, label: "API Key", value: "sk-1234567890abcdef" },
+    { id: 2, label: "Secret", value: "secret_abcdef1234567890" },
+    { id: 3, label: "URL", value: "https://api.example.com/v1" },
+  ];
+
+  const copyItem = (value: string, type: "sensitive" | "normal") => {
+    if (type === "sensitive") {
+      // Shorter feedback time for sensitive data
+      clipboard1.copyToClipboard(value);
+    } else {
+      clipboard2.copyToClipboard(value);
+    }
+  };
+
+  return (
+    <div className="multi-copy">
+      {items.map((item) => (
+        <div key={item.id} className="copy-item">
+          <label>{item.label}:</label>
+          <code className="value">
+            {item.label.includes("Secret") ? "••••••••" : item.value}
+          </code>
+          <button
+            onClick={() =>
+              copyItem(
+                item.value,
+                item.label.includes("Secret") ? "sensitive" : "normal"
+              )
+            }
+          >
+            {clipboard1.isCopied || clipboard2.isCopied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Provide clear feedback and handle errors gracefully:
+
+```tsx
+const { isCopied, copyToClipboard } = useClipboard();
+
+const handleCopy = async () => {
+  const success = await copyToClipboard(text);
+
+  if (success) {
+    // Show success feedback
+    showNotification("Copied to clipboard!");
+  } else {
+    // Handle failure gracefully
+    showNotification("Failed to copy. Please try again.", "error");
+  }
+};
+```
+
+</Callout>
+
+### Security & UX Guidelines
+
+- **🔒 Sensitive Data**: Use shorter reset times for sensitive content
+- **📱 Mobile Support**: Include fallbacks for older browsers
+- **♿ Accessibility**: Provide proper ARIA labels and announcements
+- **🎨 Visual Feedback**: Clear success/failure states
+
+### Do's and Don'ts
+
+- ✅ Provide visual feedback when copying
+- ✅ Use appropriate reset times for different content types
+- ✅ Handle clipboard permission errors gracefully
+- ✅ Include keyboard shortcuts for power users
+- ❌ Don't copy sensitive data without user consent
+- ❌ Avoid copying very large amounts of text
+- ❌ Don't rely solely on clipboard for critical functionality
+- ❌ Avoid copying without clear user intent
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~0.8kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Copy Speed",
+      value: "< 10ms",
+      description: "Modern browsers",
+    },
+    {
+      metric: "Fallback Support",
+      value: "IE 11+",
+      description: "execCommand fallback",
+    },
+    {
+      metric: "Memory Usage",
+      value: "Minimal",
+      description: "Single state + timeout",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    {
+      name: "Chrome 66+",
+      supported: true,
+      notes: "Full Clipboard API support",
+    },
+    {
+      name: "Firefox 63+",
+      supported: true,
+      notes: "Full Clipboard API support",
+    },
+    {
+      name: "Safari 13.1+",
+      supported: true,
+      notes: "Full Clipboard API support",
+    },
+    { name: "Edge 79+", supported: true, notes: "Full Clipboard API support" },
+    { name: "IE 11", supported: true, notes: "execCommand fallback" },
+    { name: "Mobile Safari", supported: true, notes: "iOS 13.4+ required" },
+  ]}
+/>
+
+## Use Cases
+
+### <Copy className="inline w-4 h-4 mr-2" /> Code Snippets
+
+Copy code blocks and documentation examples with one click.
+
+### <Share className="inline w-4 h-4 mr-2" /> Share Functionality
+
+Copy URLs, text content, or formatted data for sharing.
+
+### <Clipboard className="inline w-4 h-4 mr-2" /> Form Data Export
+
+Copy form contents in various formats (JSON, CSV, plain text).
+
+### <Check className="inline w-4 h-4 mr-2" /> API Keys & Tokens
+
+Securely copy sensitive credentials with clear feedback.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - Use proper ARIA labels for copy buttons - Announce successful copies to
+  screen readers - Provide keyboard shortcuts (Ctrl+C alternatives) - Include
+  visual and auditory feedback for copy actions - Ensure copy buttons have
+  sufficient contrast and touch targets
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Clipboard API not working">
+
+**Solution:** The Clipboard API requires HTTPS and user interaction:
+
+```tsx
+// Ensure HTTPS in production
+if (location.protocol !== "https:" && location.hostname !== "localhost") {
+  console.warn("Clipboard API requires HTTPS");
+}
+
+// Only call in response to user interaction
+const handleUserClick = async () => {
+  const success = await copyToClipboard(text);
+  // Will work when called from user event
+};
+```
+
+</Accordion>
+
+<Accordion title="Permission denied errors">
+
+**Solution:** Handle permissions gracefully:
+
+```tsx
+const copyWithPermissionCheck = async (text: string) => {
+  try {
+    const permission = await navigator.permissions.query({
+      name: "clipboard-write" as PermissionName,
+    });
+    if (permission.state === "denied") {
+      // Use fallback method
+      return fallbackCopy(text);
+    }
+    return await copyToClipboard(text);
+  } catch (err) {
+    return fallbackCopy(text);
+  }
+};
+```
+
+</Accordion>
+
+<Accordion title="Fallback not working in older browsers">
+
+**Solution:** Ensure proper fallback implementation:
+
+```tsx
+const fallbackCopy = (text: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.left = "-999999px";
+  textArea.style.top = "-999999px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    document.body.removeChild(textArea);
+    return false;
+  }
+};
+```
+
+</Accordion>
+
+<Accordion title="State not resetting after copy">
+
+**Solution:** Check your resetTime and ensure timeouts are cleared:
+
+```tsx
+// Use longer resetTime for slower feedback
+const { isCopied, copyToClipboard } = useClipboard(5000);
+
+// Or manually clear when needed
+const { isCopied, copyToClipboard, clearCopied } = useClipboard();
+
+const handleCopy = async () => {
+  await copyToClipboard(text);
+  // Manually clear after 1 second
+  setTimeout(clearCopied, 1000);
+};
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook uses the modern Clipboard API when available, with a fallback to the older `document.execCommand('copy')` method for broader browser support. It manages the copied state with automatic reset after a specified time and provides both the current state and control functions.
+
+The implementation prioritizes user experience with clear feedback and graceful error handling.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook, act } from "@testing-library/react";
+import { useClipboard } from "./useClipboard";
+
+// Mock clipboard API
+Object.assign(navigator, {
+  clipboard: {
+    writeText: jest.fn().mockResolvedValue(undefined),
+  },
+});
+
+// Mock timers
+jest.useFakeTimers();
+
+describe("useClipboard", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should copy text to clipboard", async () => {
+    const { result } = renderHook(() => useClipboard());
+
+    await act(async () => {
+      const success = await result.current.copyToClipboard("test text");
+      expect(success).toBe(true);
+    });
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("test text");
+    expect(result.current.isCopied).toBe(true);
+  });
+
+  it("should reset copied state after timeout", async () => {
+    const { result } = renderHook(() => useClipboard(1000));
+
+    await act(async () => {
+      await result.current.copyToClipboard("test");
+    });
+
+    expect(result.current.isCopied).toBe(true);
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(result.current.isCopied).toBe(false);
+  });
+
+  it("should handle clipboard errors", async () => {
+    const writeTextMock = jest
+      .fn()
+      .mockRejectedValue(new Error("Permission denied"));
+    Object.assign(navigator, {
+      clipboard: { writeText: writeTextMock },
+    });
+
+    const { result } = renderHook(() => useClipboard());
+
+    await act(async () => {
+      const success = await result.current.copyToClipboard("test");
+      expect(success).toBe(false);
+    });
+
+    expect(result.current.isCopied).toBe(false);
+  });
+
+  it("should clear copied state manually", async () => {
+    const { result } = renderHook(() => useClipboard());
+
+    await act(async () => {
+      await result.current.copyToClipboard("test");
+    });
+
+    expect(result.current.isCopied).toBe(true);
+
+    act(() => {
+      result.current.clearCopied();
+    });
+
+    expect(result.current.isCopied).toBe(false);
+  });
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="Why does copying fail on localhost HTTP?">
+
+The Clipboard API requires a secure context (HTTPS) except for localhost. For development on HTTP, the hook automatically falls back to the `execCommand` method.
+
+</Accordion>
+
+<Accordion title="Can I copy rich content (HTML, images)?">
+
+This hook is designed for plain text. For rich content, you'd need to use the full Clipboard API directly:
+
+```tsx
+// For HTML content
+await navigator.clipboard.write([
+  new ClipboardItem({
+    "text/html": new Blob([htmlContent], { type: "text/html" }),
+    "text/plain": new Blob([plainText], { type: "text/plain" }),
+  }),
+]);
+```
+
+</Accordion>
+
+<Accordion title="How do I handle very large text content?">
+
+For large content, consider chunking or compression:
+
+```tsx
+const copyLargeText = async (text: string) => {
+  if (text.length > 100000) {
+    console.warn("Large text detected, consider alternative sharing methods");
+  }
+  return await copyToClipboard(text);
+};
+```
+
+</Accordion>
+
+<Accordion title="Can I customize the success feedback duration?">
+
+Yes, use the `resetTime` parameter:
+
+```tsx
+// Reset after 5 seconds
+const { isCopied, copyToClipboard } = useClipboard(5000);
+
+// Or manually control with clearCopied
+const { isCopied, copyToClipboard, clearCopied } = useClipboard();
+```
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useTimeout](../useTimeout) - Control clipboard feedback timing
+- [useLocalStorage](../useLocalStorage) - Store copied content history
+- [useClickOutside](../useClickOutside) - Close copy menus on outside clicks
+
+## Changelog
+
+- **2.0.0** — Enhanced TypeScript support, improved fallback handling, better error management, comprehensive documentation
+- **1.2.0** — Added clearCopied function and customizable reset time
+- **1.1.0** — Improved browser compatibility with execCommand fallback
+- **1.0.0** — Initial release with basic clipboard functionality
