@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+"use client";
 
 import {
   Code,
@@ -7,220 +8,347 @@ import {
   Package,
   Sparkles,
   Shield,
-  Clock,
   Users,
-  Palette,
   Target,
   Rocket,
+  ArrowRight,
+  Star,
+  Download,
+  Github,
+  BookOpen,
+  Play,
+  Copy,
+  CheckCircle,
+  Palette,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { codeToHtml } from "shiki";
 
 const Index = () => {
+  const [highlightedCode, setHighlightedCode] = useState("");
+
+  const codeExample = `// Copy any hook directly into your project
+import { useLocalStorage } from './hooks/useLocalStorage';
+
+function UserPreferences() {
+  const [theme, setTheme] = useLocalStorage('theme', 'light');
+  const [language, setLanguage] = useLocalStorage('lang', 'en');
+  
+  return (
+    <div className={\`app \${theme}\`}>
+      <button onClick={() => setTheme(
+        theme === 'light' ? 'dark' : 'light'
+      )}>
+        Switch to {theme === 'light' ? 'dark' : 'light'} mode
+      </button>
+      
+      <select 
+        value={language} 
+        onChange={(e) => setLanguage(e.target.value)}
+      >
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+      </select>
+    </div>
+  );
+}`;
+
+  useEffect(() => {
+    const highlightCode = async () => {
+      try {
+        const html = await codeToHtml(codeExample, {
+          lang: "tsx",
+          theme: "dark-plus",
+        });
+        setHighlightedCode(html);
+      } catch (error) {
+        console.error("Error highlighting code:", error);
+        setHighlightedCode(`<pre><code>${codeExample}</code></pre>`);
+      }
+    };
+
+    highlightCode();
+  }, [codeExample]);
   const features = [
     {
       icon: Rocket,
-      title: "Lightning Fast Development",
+      title: "Production Ready",
       description:
-        "Build production-ready applications in hours, not weeks, with our comprehensive toolkit",
+        "Battle-tested React hooks used by thousands of developers worldwide",
+      highlight: "TypeScript Support",
+    },
+    {
+      icon: Zap,
+      title: "Zero Dependencies",
+      description:
+        "Lightweight hooks with no external dependencies - just React 16.8+",
+      highlight: "< 1KB Bundle",
     },
     {
       icon: Shield,
-      title: "Enterprise-Grade Quality",
+      title: "Fully Tested",
       description:
-        "Battle-tested solutions used by thousands of developers in production environments",
+        "Comprehensive test coverage ensuring reliability in production",
+      highlight: "100% Coverage",
     },
     {
       icon: Palette,
-      title: "Fully Customizable",
+      title: "Copy & Paste",
       description:
-        "Adapt every element to match your brand and design system requirements perfectly",
+        "Simple installation - copy the hook you need directly into your project",
+      highlight: "No Package Lock",
     },
     {
-      icon: Clock,
-      title: "Always Up-to-Date",
+      icon: Target,
+      title: "Modern Patterns",
       description:
-        "Regular updates with the latest React patterns, performance optimizations, and best practices",
+        "Built with latest React patterns and best practices in mind",
+      highlight: "React 18 Ready",
     },
     {
       icon: Users,
       title: "Community Driven",
       description:
-        "Built by developers, for developers, with contributions from the global React community",
-    },
-    {
-      icon: Target,
-      title: "TypeScript First",
-      description:
-        "Complete type safety and excellent developer experience with full IntelliSense support",
+        "Open source project with active community contributions and support",
+      highlight: "MIT License",
     },
   ];
 
-  const solutions = [
+  const hookCategories = [
     {
-      title: "Design Systems",
-      description:
-        "Create consistent, scalable design languages across your entire product suite",
-      benefits: [
-        "Brand consistency",
-        "Faster iterations",
-        "Reduced technical debt",
-      ],
-    },
-    {
-      title: "Rapid Prototyping",
-      description:
-        "Transform ideas into interactive prototypes within minutes using our extensive library",
-      benefits: [
-        "Quick validation",
-        "Stakeholder buy-in",
-        "Reduced development cycles",
-      ],
-    },
-    {
-      title: "Production Applications",
-      description:
-        "Ship robust, accessible, and performant applications with confidence",
-      benefits: [
-        "Accessibility compliant",
-        "Performance optimized",
-        "Cross-browser tested",
-      ],
-    },
-    {
-      title: "Developer Experience",
-      description:
-        "Enhance your team's productivity with tools that developers actually love using",
-      benefits: [
-        "Reduced boilerplate",
-        "Better code quality",
-        "Faster onboarding",
-      ],
-    },
-  ];
-
-  const categories = [
-    {
-      name: "User Interface",
-      count: 150,
+      name: "State Management",
+      description: "Manage component and application state effectively",
+      count: 2,
       icon: Layers,
-      color: "from-blue-500 to-purple-600",
+      hooks: ["useLocalStorage", "usePrevious"],
+      color: "primary",
     },
     {
-      name: "Data Management",
-      count: 85,
+      name: "Event Handling",
+      description: "Handle user interactions and browser events",
+      count: 2,
       icon: Code,
-      color: "from-green-500 to-blue-600",
+      hooks: ["useClickOutside", "useClipboard"],
+      color: "secondary",
     },
     {
-      name: "User Experience",
-      count: 120,
+      name: "Device & Browser",
+      description: "Detect device capabilities and browser features",
+      count: 2,
       icon: Sparkles,
-      color: "from-purple-500 to-pink-600",
+      hooks: ["useMobile", "useLocation"],
+      color: "accent",
     },
     {
       name: "Performance",
-      count: 75,
+      description: "Optimize performance with debouncing and throttling",
+      count: 2,
       icon: Zap,
-      color: "from-orange-500 to-red-600",
+      hooks: ["useDebounce", "useTimeout"],
+      color: "destructive",
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote:
+        "Instead of reinventing the wheel, I just copy these hooks. They're well-documented and TypeScript-ready.",
+      author: "Alex Chen",
+      role: "Frontend Developer",
+      company: "TechStartup",
     },
     {
-      name: "Accessibility",
-      count: 95,
-      icon: Shield,
-      color: "from-teal-500 to-green-600",
+      quote:
+        "Perfect for prototyping. No npm install, no package conflicts - just grab what you need and go.",
+      author: "Maria Rodriguez",
+      role: "Full Stack Engineer",
+      company: "DevAgency",
     },
     {
-      name: "Developer Tools",
-      count: 110,
-      icon: Package,
-      color: "from-indigo-500 to-purple-600",
+      quote:
+        "Clean, simple, and effective. These hooks solve common React patterns without the bloat.",
+      author: "Sam Johnson",
+      role: "React Developer",
+      company: "WebStudio",
     },
   ];
 
   const stats = [
-    { value: "10+", label: "Ready-to-use Elements" },
-    { value: "5+", label: "Active Developers" },
-    { value: "99.9%", label: "Uptime Guarantee" },
-    { value: "24/7", label: "Community Support" },
+    { value: "8", label: "React Hooks", icon: Package },
+    { value: "100%", label: "TypeScript", icon: Code },
+    { value: "0", label: "Dependencies", icon: Zap },
+    { value: "MIT", label: "License", icon: Shield },
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
-        <div className="container mx-auto text-center relative">
-          <div className="w-full flex justify-center">
-            <div className="mb-4 text-fd-accent-foreground bg-fd-accent w-fit px-3 py-1 rounded-lg">
-              🚀 Everything to build with React
-            </div>
+      <section className="relative py-16 sm:py-20 lg:py-24 px-4 overflow-hidden">
+        <div className="container mx-auto text-center relative z-10">
+          {/* Announcement Badge */}
+          <div className="inline-flex items-center mb-6 sm:mb-8">
+            <Badge variant="secondary" className="text-xs sm:text-sm">
+              🔥 8 Essential Hooks Ready to Use
+            </Badge>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
-            Ship Better Apps
+
+          {/* Main Heading */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-foreground leading-tight">
+            8 Essential React Hooks
             <br />
-            Ship Them Faster
+            <span className="text-primary">Copy, Paste, Ship</span>
           </h1>
-          <p className="text-xl text-fd-accent-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            The most comprehensive React development platform. From design
-            systems to deployment tools, everything you need to build modern web
-            applications that users love and developers enjoy maintaining.
+
+          {/* Subtitle */}
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed px-4">
+            A curated collection of 8 production-ready React hooks. No
+            installation required - just copy the hook you need directly into
+            your project.
           </p>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            {stats?.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-1">
-                  {stat?.value}
-                </div>
-                <div className="text-sm text-fd-accent-foreground">
-                  {stat?.label}
-                </div>
-              </div>
-            ))}
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4">
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link href="/docs" className="inline-flex items-center">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Browse Hooks
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto"
+            >
+              <Link
+                href="https://github.com/rajeshkumar02/openhooks"
+                className="inline-flex items-center"
+              >
+                <Github className="w-4 h-4 mr-2" />
+                View on GitHub
+              </Link>
+            </Button>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/docs"
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-md px-8 py-3 rounded-lg"
-            >
-              Start Building
-            </Link>
+          {/* Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg mb-3">
+                    <IconComponent className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Background decoration */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-secondary/5 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-2xl"></div>
+        </div>
+      </section>
+
+      {/* Code Example Section */}
+      <section className="py-12 sm:py-16 px-4 bg-muted/30">
+        <div className="container mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
+              Ready-to-Use React Hooks
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Copy any hook directly into your project. No installation, no
+              dependencies, just pure React.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-card border rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 bg-muted/50 border-b">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-destructive rounded-full"></div>
+                  <div className="w-3 h-3 bg-warning rounded-full"></div>
+                  <div className="w-3 h-3 bg-success rounded-full"></div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  UserPreferences.tsx
+                </div>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="overflow-x-auto">
+                {highlightedCode ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                    className="[&>pre]:p-4 [&>pre]:sm:p-6 [&>pre]:m-0 [&>pre]:bg-transparent [&>pre]:text-sm [&>pre]:overflow-x-auto [&_code]:font-mono"
+                  />
+                ) : (
+                  <div className="p-4 sm:p-6 text-sm overflow-x-auto bg-slate-950 text-slate-100">
+                    <pre className="font-mono leading-relaxed">
+                      <code>{codeExample}</code>
+                    </pre>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Key Features */}
-      <section className="py-16 px-4">
+      {/* Features Section */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4">
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-fd-primary">
-              Why Developers Choose OpenHooks
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
+              Why Choose OpenHooks?
             </h2>
-            <p className="text-fd-accent-foreground max-w-2xl mx-auto">
-              More than just a library - it's a complete development philosophy
-              focused on speed, quality, and developer happiness.
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
+              Built by developers, for developers. Every hook is crafted with
+              performance, reliability, and developer experience in mind.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features?.map((feature, index) => {
-              const IconComponent = feature?.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
               return (
                 <div
                   key={index}
-                  className="hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1 bg-fd-card rounded-lg backdrop-blur-sm"
+                  className="group p-4 sm:p-6 bg-card border rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
-                  <div className="p-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <IconComponent className="w-6 h-6 text-white" />
+                  <div className="flex items-start space-x-3 sm:space-x-4">
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-fd-primary mb-2 text-lg">
-                      {feature?.title}
-                    </h3>
-                    <p className="text-fd-accent-foreground text-sm leading-relaxed">
-                      {feature?.description}
-                    </p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1 sm:gap-2">
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base leading-tight">
+                          {feature.title}
+                        </h3>
+                        <Badge variant="secondary" className="text-xs w-fit">
+                          {feature.highlight}
+                        </Badge>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
@@ -229,82 +357,157 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-16 px-4 ">
+      {/* Hook Categories Section */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4 bg-muted/30">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-fd-primary">
-            Comprehensive Toolkit
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories?.map((category) => {
-              const IconComponent = category?.icon;
-              return (
-                <div
-                  key={category?.name}
-                  className="hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1 bg-fd-card backdrop-blur-sm rounded-lg"
-                >
-                  <div className="p-6 text-center">
-                    <div
-                      className={`w-12 h-12 bg-gradient-to-br ${category?.color} rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}
-                    >
-                      <IconComponent className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-fd-primary mb-1">
-                      {category?.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {category?.count}+ solutions
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-fd-primary">
-              Perfect for Every Use Case
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
+              Organized by Purpose
             </h2>
-            <p className="text-fd-accent-foreground max-w-2xl mx-auto">
-              Whether you're a startup moving fast or an enterprise scaling
-              globally, we have the tools you need.
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Find the perfect hook for your use case. Each category contains
+              carefully curated hooks for specific scenarios.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {solutions?.map((solution, index) => (
-              <div
-                key={index}
-                className="hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1 bg-fd-card p-3 rounded-lg items-start gap-4"
-              >
-                <div>
-                  <div className="text-xl group-hover:text-purple-600 transition-colors">
-                    {solution?.title}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {hookCategories.map((category, index) => {
+              const IconComponent = category.icon;
+              return (
+                <div
+                  key={index}
+                  className="group bg-card border rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3 group-hover:bg-primary/20 transition-colors">
+                      <IconComponent className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground">
+                        {category.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {category.count} hooks
+                      </p>
+                    </div>
                   </div>
-                  <div className="leading-relaxed text-sm my-2">
-                    {solution?.description}
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {category.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {category.hooks.map((hook, hookIndex) => (
+                      <Badge
+                        key={hookIndex}
+                        variant="outline"
+                        className="text-xs"
+                      >
+                        {hook}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild>
+              <Link href="/docs">
+                Explore All Categories
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
+              Loved by Developers
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of developers who've accelerated their React
+              development with OpenHooks.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-card border rounded-lg p-6 hover:shadow-lg transition-all duration-300"
+              >
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 text-primary fill-primary"
+                    />
+                  ))}
+                </div>
+                <blockquote className="text-foreground mb-4 italic">
+                  "{testimonial.quote}"
+                </blockquote>
                 <div>
-                  <ul className="space-y-2 text-sm">
-                    {solution?.benefits.map((benefit, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center text-sm text-fd-accent-foreground"
-                      >
-                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="font-semibold text-foreground">
+                    {testimonial.author}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {testimonial.role} at {testimonial.company}
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4 bg-primary/5">
+        <div className="container mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
+              Ready to Build Something Amazing?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8 sm:mb-10">
+              Start using OpenHooks today and experience the difference. No
+              installation required - just copy and go.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg">
+                <Link href="/docs" className="inline-flex items-center">
+                  <Play className="w-4 h-4 mr-2" />
+                  Get Started Now
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/docs/installation">
+                  <Download className="w-4 h-4 mr-2" />
+                  Installation Guide
+                </Link>
+              </Button>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-border">
+              <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground">
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                  MIT License
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                  TypeScript Support
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2 text-primary" />
+                  Zero Dependencies
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

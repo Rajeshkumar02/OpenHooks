@@ -1,57 +1,225 @@
 ---
-title: React Hooks & Components
-description: A simple and powerful collection of reusable React utilities for faster development.
+title: Get Started
+description: Quickly integrate and use our React Hooks in your projects with this comprehensive guide.
 ---
 
-# 🧩 React Hooks & Components
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
 
-A growing collection of **reusable**, **typed**, and **production-ready** utilities for React apps. Built by developers, for developers — focused on real-world use cases.
+# Welcome to OpenHooks
 
----
+> A powerful CLI and collection of reusable React custom hooks designed to accelerate your development workflow.
 
-## ⚡ Why Use This?
-
-- ✅ Practical, not theoretical
-- ✅ Lightweight and dependency-free
-- ✅ TypeScript and JavaScript support
-- ✅ Copy-paste or install — your choice
+OpenHooks provides a comprehensive suite of production-ready React hooks that you can install instantly via our CLI tool or use directly in your projects. Stop reinventing the wheel – focus on building amazing user experiences.
 
 ---
 
-## 📊 Project Highlights
+## 🚀 What is OpenHooks?
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center my-6">
-  <div className="p-4 border rounded-xl">
-    <div className="text-2xl font-bold">10+</div>
-    <div className="text-sm">Hooks & Components</div>
-  </div>
-  <div className="p-4 border rounded-xl">
-    <div className="text-2xl font-bold">Open</div>
-    <div className="text-sm">For Contributors</div>
-  </div>
-  <div className="p-4 border rounded-xl">
-    <div className="text-2xl font-bold">Free</div>
-    <div className="text-sm">Forever</div>
-  </div>
-  <div className="p-4 border rounded-xl">
-    <div className="text-2xl font-bold">🚀</div>
-    <div className="text-sm">Actively Growing</div>
-  </div>
-</div>
+OpenHooks is a **developer-first ecosystem** that combines:
+
+- **📦 CLI Tool**: Install hooks instantly with `open-hook add [hookName]`
+- **🪝 Hook Library**: Curated collection of production-ready React hooks
+- **📚 Documentation**: Comprehensive guides with live examples
+- **🔧 TypeScript Support**: Full type safety out of the box
+- **🌍 Open Source**: Community-driven and always free
+
+<Callout type="info">
+  OpenHooks bridges the gap between needing a utility hook and having to build
+  it from scratch. Get production-ready code in seconds, not hours.
+</Callout>
 
 ---
 
-## 🙌 Join the Journey
+## ✨ Key Advantages
 
-This library is open source and community-powered. Your ideas and contributions are always welcome!
+### 🎯 **Instant Productivity**
 
-<EnvURL env="NEXT_PUBLIC_GITHUB_REPO" base="https://github.com" link>
-  Contribute on GitHub
-</EnvURL>
+- Zero configuration required
+- Install hooks in seconds with our CLI
+- Copy-paste ready code snippets
+- No package dependencies to manage
+
+### 🔒 **Production Ready**
+
+- Battle-tested in real applications
+- Comprehensive TypeScript support
+- Performance optimized
+- Accessibility considerations built-in
+
+### 🛡️ **Quality Assured**
+
+- Consistent coding standards
+- Thorough documentation
+- Unit tests included
+- Browser compatibility verified
+
+### 🌱 **Developer Experience**
+
+- Interactive documentation with live examples
+- Clear API references
+- Best practices included
+- Migration guides for updates
 
 ---
 
-## 🧭 Explore All
+## 🎨 What We Provide
 
-- [Browse all Hooks →](/docs/hooks)
-- [Browse all Components →](/docs/components)
+<Cards>
+  <Card
+    title="State Management Hooks"
+    description="Handle local storage, previous values, and complex state logic"
+    href="/docs/hooks#state-management"
+  />
+  <Card
+    title="Event Handling Hooks"
+    description="Click outside detection, keyboard shortcuts, and event listeners"
+    href="/docs/hooks#event-handling"
+  />
+  <Card
+    title="Performance Hooks"
+    description="Debouncing, throttling, and optimized render patterns"
+    href="/docs/hooks#performance"
+  />
+  <Card
+    title="Device & Browser Hooks"
+    description="Mobile detection, geolocation, and browser API integration"
+    href="/docs/hooks#device-and-browser"
+  />
+  <Card
+    title="Utility Hooks"
+    description="Timeouts, clipboard access, and common utility patterns"
+    href="/docs/hooks#utilities"
+  />
+  <Card
+    title="Lifecycle Hooks"
+    description="Component mounting, unmounting, and effect management"
+    href="/docs/hooks#lifecycle-and-effects"
+  />
+</Cards>
+
+---
+
+## 🚀 Quick Start
+
+Get started with OpenHooks in under a minute:
+
+### 1. Install the CLI
+
+```bash
+npm install -g open-hook
+```
+
+### 2. Initialize Your Project
+
+```bash
+open-hook init
+```
+
+### 3. Add Your First Hook
+
+```bash
+open-hook add useClickOutside
+```
+
+### 4. Use in Your Component
+
+```tsx
+import { useRef, useState } from "react";
+import { useClickOutside } from "./hooks/useClickOutside";
+
+function MyComponent() {
+  const ref = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useClickOutside(ref, () => setIsOpen(false));
+
+  return <div ref={ref}>{/* Your component content */}</div>;
+}
+```
+
+<Callout type="tip">
+  Want to see all available hooks? Run `open-hook list` to browse the complete
+  collection.
+</Callout>
+
+---
+
+## 🎯 Our Mission
+
+We believe developers should spend time building unique features, not reimplementing common patterns. OpenHooks provides:
+
+- **Consistency** across your projects
+- **Reliability** through battle-tested code
+- **Efficiency** via instant installation
+- **Learning** through comprehensive documentation
+
+---
+
+## 🌟 Why Choose OpenHooks?
+
+### vs. Building Custom Hooks
+
+- ⏱️ **Save Time**: Get hooks instantly instead of building from scratch
+- 🐛 **Fewer Bugs**: Use tested, proven implementations
+- 📖 **Documentation**: Complete guides and examples included
+- 🔄 **Updates**: Get improvements and fixes automatically
+
+### vs. Heavy Libraries
+
+- 📦 **No Dependencies**: Pure React code, no external packages
+- 🎯 **Targeted**: Install only what you need
+- 📏 **Lightweight**: Minimal bundle size impact
+- 🔧 **Customizable**: Modify the code to fit your needs
+
+### vs. Copy-Paste Solutions
+
+- 🔍 **Searchable**: Organized, discoverable hook collection
+- 📊 **Versioned**: Track changes and improvements
+- 🧪 **Tested**: Unit tests and real-world validation
+- 🎨 **Consistent**: Uniform API design across all hooks
+
+---
+
+## 🛣️ What's Next?
+
+Ready to supercharge your React development? Here's where to go:
+
+<Cards>
+  <Card
+    title="📦 Installation Guide"
+    description="Set up OpenHooks CLI and configure your project"
+    href="/docs/installation"
+  />
+  <Card
+    title="🪝 Browse Hooks"
+    description="Explore our collection of production-ready hooks"
+    href="/docs/hooks"
+  />
+  <Card
+    title="💡 Examples"
+    description="See real-world usage patterns and best practices"
+    href="/docs/examples"
+  />
+  <Card
+    title="🤝 Contributing"
+    description="Help us grow the collection with your own hooks"
+    href="/docs/contributing"
+  />
+</Cards>
+
+---
+
+## 🌍 Community
+
+OpenHooks is **open source** and **community-driven**. We welcome:
+
+- 🐛 Bug reports and feature requests
+- 🪝 New hook contributions
+- 📝 Documentation improvements
+- 💬 Community discussions
+
+<Callout>
+  Ready to boost your productivity? [Install OpenHooks](/docs/installation) and
+  start building faster today! 🚀
+</Callout>

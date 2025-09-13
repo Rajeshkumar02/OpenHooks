@@ -1,0 +1,776 @@
+---
+title: useTimeout
+description: Execute functions after a specified delay with automatic cleanup and dynamic control in React components.
+tags: ["react", "hooks", "timeout", "delay", "timer"]
+status: stable
+version: 2.0.0
+lastUpdated: "2025-09-13"
+author: "OpenHooks Team"
+category: "state-management"
+difficulty: beginner
+bundle_size: "~0.5kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Clock, Play, Pause, RotateCcw, Timer } from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useTimeout/Example";
+
+# useTimeout
+
+> Execute functions after a specified delay with automatic cleanup and dynamic control in React components.
+
+<MetaInfo
+  status="stable"
+  version="2.0.0"
+  bundleSize="~0.5kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```tsx
+import { useState } from "react";
+import { useTimeout } from "@/hooks/useTimeout";
+
+function DelayedMessage() {
+  const [message, setMessage] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Show message after 3 seconds
+  useTimeout(() => {
+    setMessage("Hello after 3 seconds!");
+    setIsVisible(true);
+  }, 3000);
+
+  // Hide message after 6 seconds
+  useTimeout(
+    () => {
+      setIsVisible(false);
+    },
+    isVisible ? 6000 : null
+  );
+
+  return (
+    <div>
+      <h2>Delayed Message Demo</h2>
+      {isVisible && <p className="message">{message}</p>}
+      {!isVisible && <p>Waiting for message...</p>}
+    </div>
+  );
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```jsx
+import { useState } from "react";
+import { useTimeout } from "@/hooks/useTimeout";
+
+function DelayedMessage() {
+  const [message, setMessage] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Show message after 3 seconds
+  useTimeout(() => {
+    setMessage("Hello after 3 seconds!");
+    setIsVisible(true);
+  }, 3000);
+
+  // Hide message after 6 seconds
+  useTimeout(
+    () => {
+      setIsVisible(false);
+    },
+    isVisible ? 6000 : null
+  );
+
+  return (
+    <div>
+      <h2>Delayed Message Demo</h2>
+      {isVisible && <p className="message">{message}</p>}
+      {!isVisible && <p>Waiting for message...</p>}
+    </div>
+  );
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+    <Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+      <Tab value="npm">
+
+```bash
+npx open-hook add useTimeout
+```
+
+      </Tab>
+      <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useTimeout
+```
+
+      </Tab>
+      <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useTimeout
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+    <Callout type="info">
+      No external dependencies needed - just React 16.8+
+    </Callout>
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```ts title="hooks/useTimeout.ts"
+import { useEffect, useRef } from "react";
+
+export function useTimeout(callback: () => void, delay: number | null) {
+  const savedCallback = useRef(callback);
+
+  // Remember the latest callback
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the timeout
+  useEffect(() => {
+    if (delay === null) {
+      return;
+    }
+
+    const id = setTimeout(() => savedCallback.current(), delay);
+
+    return () => clearTimeout(id);
+  }, [delay]);
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```js title="hooks/useTimeout.js"
+import { useEffect, useRef } from "react";
+
+export function useTimeout(callback, delay) {
+  const savedCallback = useRef(callback);
+
+  // Remember the latest callback
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the timeout
+  useEffect(() => {
+    if (delay === null) {
+      return;
+    }
+
+    const id = setTimeout(() => savedCallback.current(), delay);
+
+    return () => clearTimeout(id);
+  }, [delay]);
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    callback: {
+      type: "() => void",
+      description: "The function to execute after the delay",
+    },
+    delay: {
+      type: "number | null",
+      description: "Delay in milliseconds. Use null to cancel the timeout.",
+    },
+  }}
+/>
+
+### Returns
+
+<TypeTable
+  type={{
+    void: {
+      type: "void",
+      description: "This hook doesn't return anything",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+function useTimeout(callback: () => void, delay: number | null): void;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["Conditional Timeout", "Dynamic Delays", "Auto-Save", "Toast Notifications"]}>
+  <Tab value="Conditional Timeout">
+
+```tsx
+function ConditionalTimeout() {
+  const [isActive, setIsActive] = useState(true);
+  const [message, setMessage] = useState("");
+
+  // Only run timeout when isActive is true
+  useTimeout(
+    () => {
+      setMessage("Timeout executed!");
+    },
+    isActive ? 2000 : null
+  );
+
+  return (
+    <div>
+      <button onClick={() => setIsActive(!isActive)}>
+        {isActive ? "Cancel" : "Start"} Timeout
+      </button>
+      <p>{message}</p>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Dynamic Delays">
+
+```tsx
+function DynamicDelayTimer() {
+  const [delay, setDelay] = useState(1000);
+  const [count, setCount] = useState(0);
+
+  useTimeout(() => {
+    setCount((prev) => prev + 1);
+  }, delay);
+
+  // Reset timeout with new delay each time count changes
+  useEffect(() => {
+    // This will restart the timeout with the current delay
+  }, [count]);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <input
+        type="range"
+        min="500"
+        max="5000"
+        value={delay}
+        onChange={(e) => setDelay(Number(e.target.value))}
+      />
+      <p>Delay: {delay}ms</p>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Auto-Save">
+
+```tsx
+function AutoSaveForm() {
+  const [formData, setFormData] = useState({ title: "", content: "" });
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const saveForm = useCallback(async () => {
+    if (hasUnsavedChanges) {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setLastSaved(new Date());
+      setHasUnsavedChanges(false);
+    }
+  }, [hasUnsavedChanges]);
+
+  // Auto-save after 2 seconds of inactivity
+  useTimeout(saveForm, hasUnsavedChanges ? 2000 : null);
+
+  const updateForm = (updates: Partial<typeof formData>) => {
+    setFormData((prev) => ({ ...prev, ...updates }));
+    setHasUnsavedChanges(true);
+  };
+
+  return (
+    <form>
+      <input
+        value={formData.title}
+        onChange={(e) => updateForm({ title: e.target.value })}
+        placeholder="Title"
+      />
+      <textarea
+        value={formData.content}
+        onChange={(e) => updateForm({ content: e.target.value })}
+        placeholder="Content"
+      />
+      {hasUnsavedChanges && <p>Unsaved changes...</p>}
+      {lastSaved && <p>Last saved: {lastSaved.toLocaleTimeString()}</p>}
+    </form>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Toast Notifications">
+
+```tsx
+function ToastNotification() {
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string }>>(
+    []
+  );
+
+  const addToast = (message: string) => {
+    const id = Math.random().toString(36);
+    setToasts((prev) => [...prev, { id, message }]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  return (
+    <div>
+      <button onClick={() => addToast("New notification!")}>Add Toast</button>
+
+      <div className="toast-container">
+        {toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            onRemove={() => removeToast(toast.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Toast({
+  message,
+  onRemove,
+}: {
+  message: string;
+  onRemove: () => void;
+}) {
+  // Auto-remove toast after 3 seconds
+  useTimeout(onRemove, 3000);
+
+  return (
+    <div className="toast">
+      {message}
+      <button onClick={onRemove}>×</button>
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Use useTimeout for delayed actions with automatic cleanup:
+
+```tsx
+// ✅ Good - Clear timeout intentions
+useTimeout(() => {
+  showNotification("Welcome!");
+}, 1000);
+
+// ✅ Good - Conditional execution
+useTimeout(
+  () => {
+    autoSave();
+  },
+  hasUnsavedChanges ? 5000 : null
+);
+
+// ❌ Avoid - Complex logic in timeout
+useTimeout(() => {
+  // Too much logic here
+  fetchData().then(processData).then(updateUI);
+}, 1000);
+```
+
+</Callout>
+
+### Performance Guidelines
+
+- **🎯 Single Purpose**: Keep timeout callbacks focused and simple
+- **🧹 Automatic Cleanup**: The hook handles cleanup automatically
+- **🔄 Dynamic Control**: Use null delay to cancel timeouts
+- **⚡ Callback Stability**: Use useCallback for complex callback functions
+
+### Do's and Don'ts
+
+- ✅ Use for delayed notifications and messages
+- ✅ Implement auto-save functionality
+- ✅ Create timed UI animations
+- ✅ Handle delayed API calls
+- ❌ Don't use for intervals (use setInterval instead)
+- ❌ Avoid heavy computations in callbacks
+- ❌ Don't forget to handle component unmounting
+- ❌ Avoid setting very short delays (< 50ms)
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~0.5kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Memory Usage",
+      value: "Minimal",
+      description: "Single timeout reference",
+    },
+    {
+      metric: "Cleanup",
+      value: "Automatic",
+      description: "Clears timeout on unmount",
+    },
+    {
+      metric: "Performance",
+      value: "Excellent",
+      description: "No performance overhead",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome (latest)", supported: true, notes: "Full support" },
+    { name: "Firefox (latest)", supported: true, notes: "Full support" },
+    { name: "Safari (latest)", supported: true, notes: "Full support" },
+    { name: "Edge (latest)", supported: true, notes: "Full support" },
+    { name: "IE 11", supported: false, notes: "useEffect/useRef required" },
+    { name: "Node.js", supported: true, notes: "SSR compatible" },
+  ]}
+/>
+
+## Use Cases
+
+### <Clock className="inline w-4 h-4 mr-2" /> Delayed Actions
+
+Execute functions after a specific delay with automatic cleanup.
+
+### <Play className="inline w-4 h-4 mr-2" /> Auto-Save Features
+
+Implement automatic saving after periods of user inactivity.
+
+### <Timer className="inline w-4 h-4 mr-2" /> Toast Notifications
+
+Create self-dismissing notifications and alerts.
+
+### <RotateCcw className="inline w-4 h-4 mr-2" /> UI Animations
+
+Trigger delayed animations and transitions.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - Use timeouts for non-critical UI updates only - Provide ways to extend or
+  cancel important timeouts - Announce timeout-based changes to screen readers -
+  Consider users with cognitive disabilities who may need more time
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Timeout not executing">
+
+**Solution:** Check that delay is not null and callback is properly defined:
+
+```tsx
+// ❌ Wrong - delay is null
+useTimeout(callback, null);
+
+// ✅ Correct - valid delay
+useTimeout(callback, 1000);
+
+// ❌ Wrong - undefined callback
+useTimeout(undefined, 1000);
+
+// ✅ Correct - proper callback
+useTimeout(() => console.log("Hello"), 1000);
+```
+
+</Accordion>
+
+<Accordion title="Timeout executing with old values">
+
+**Solution:** Use useCallback to stabilize the callback:
+
+```tsx
+// ❌ Problem - callback captures old values
+const [count, setCount] = useState(0);
+useTimeout(() => {
+  console.log(count); // Always logs 0
+}, 1000);
+
+// ✅ Solution - stable callback with current values
+const callback = useCallback(() => {
+  console.log(count); // Logs current count
+}, [count]);
+useTimeout(callback, 1000);
+```
+
+</Accordion>
+
+<Accordion title="Multiple timeouts interfering">
+
+**Solution:** Each useTimeout call is independent:
+
+```tsx
+// ✅ These don't interfere with each other
+useTimeout(() => console.log("First"), 1000);
+useTimeout(() => console.log("Second"), 2000);
+useTimeout(() => console.log("Third"), 3000);
+```
+
+</Accordion>
+
+<Accordion title="Timeout not clearing on unmount">
+
+**Solution:** The hook automatically clears timeouts, but ensure proper usage:
+
+```tsx
+// ✅ Automatic cleanup on unmount
+function Component() {
+  useTimeout(() => {
+    // This won't run if component unmounts
+    updateState();
+  }, 5000);
+
+  return <div>Component</div>;
+}
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook uses useRef to store the latest callback function and useEffect to manage the setTimeout. When the delay changes, it clears the previous timeout and sets a new one. The callback ref ensures that the timeout always executes the most recent version of the callback function.
+
+The cleanup function in useEffect automatically clears the timeout when the component unmounts or the delay changes.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook, act } from "@testing-library/react";
+import { useTimeout } from "./useTimeout";
+
+// Mock timers
+jest.useFakeTimers();
+
+describe("useTimeout", () => {
+  it("should execute callback after delay", () => {
+    const callback = jest.fn();
+
+    renderHook(() => useTimeout(callback, 1000));
+
+    expect(callback).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not execute when delay is null", () => {
+    const callback = jest.fn();
+
+    renderHook(() => useTimeout(callback, null));
+
+    act(() => {
+      jest.advanceTimersByTime(5000);
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it("should clear timeout on unmount", () => {
+    const callback = jest.fn();
+
+    const { unmount } = renderHook(() => useTimeout(callback, 1000));
+
+    unmount();
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it("should restart timeout when delay changes", () => {
+    const callback = jest.fn();
+
+    const { rerender } = renderHook(
+      ({ delay }) => useTimeout(callback, delay),
+      { initialProps: { delay: 1000 } }
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    rerender({ delay: 2000 });
+
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="What's the difference between useTimeout and setTimeout?">
+
+useTimeout provides automatic cleanup and React integration:
+
+```tsx
+// Manual setTimeout - requires cleanup
+useEffect(() => {
+  const id = setTimeout(callback, delay);
+  return () => clearTimeout(id);
+}, []);
+
+// useTimeout - automatic cleanup
+useTimeout(callback, delay);
+```
+
+</Accordion>
+
+<Accordion title="Can I pause and resume timeouts?">
+
+Yes, by setting delay to null:
+
+```tsx
+const [isPaused, setIsPaused] = useState(false);
+
+useTimeout(
+  () => {
+    console.log("Executed!");
+  },
+  isPaused ? null : 3000
+);
+```
+
+</Accordion>
+
+<Accordion title="How do I create repeating timeouts?">
+
+For repeating behavior, restart the timeout in the callback:
+
+```tsx
+const [count, setCount] = useState(0);
+
+useTimeout(() => {
+  setCount((prev) => prev + 1);
+  // This will restart the timeout due to count change
+}, 1000);
+```
+
+Or use setInterval for true intervals.
+
+</Accordion>
+
+<Accordion title="Is this hook SSR-safe?">
+
+Yes, useTimeout is SSR-safe. It uses useEffect which doesn't run on the server, preventing timeout execution during SSR.
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useDebounce](../useDebounce) - Debounce value changes with timeout
+- [useLocalStorage](../useLocalStorage) - Auto-save to localStorage
+- [usePrevious](../usePrevious) - Track changes that trigger timeouts
+
+## Changelog
+
+- **2.0.0** — Enhanced TypeScript support, improved callback handling, comprehensive documentation and examples
+- **1.1.0** — Added null delay support for conditional timeouts
+- **1.0.0** — Initial release with basic timeout functionality

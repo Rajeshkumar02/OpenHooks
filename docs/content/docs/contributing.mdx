@@ -1,0 +1,459 @@
+---
+title: Contributing
+description: Help us grow OpenHooks by contributing new hooks, improvements, and documentation.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Card, Cards } from "fumadocs-ui/components/card";
+
+# Contributing to OpenHooks
+
+We welcome contributions from the community! Whether you're fixing bugs, adding new hooks, or improving documentation, every contribution helps make OpenHooks better for everyone.
+
+---
+
+## 🎯 Ways to Contribute
+
+<Cards>
+  <Card
+    title="🪝 New Hooks"
+    description="Create new utility hooks that solve common React problems"
+    href="#contributing-hooks"
+  />
+  <Card
+    title="🐛 Bug Fixes"
+    description="Help fix issues and improve existing hook implementations"
+    href="#bug-fixes"
+  />
+  <Card
+    title="📝 Documentation"
+    description="Improve guides, examples, and API documentation"
+    href="#documentation"
+  />
+  <Card
+    title="🧪 Testing"
+    description="Add tests and improve code quality"
+    href="#testing"
+  />
+</Cards>
+
+---
+
+## 🚀 Getting Started
+
+<Steps>
+
+<Step>
+
+### Fork the Repository
+
+Visit [OpenHooks on GitHub](https://github.com/Rajeshkumar02/OpenHooks) and click "Fork" to create your own copy.
+
+</Step>
+
+<Step>
+
+### Clone Your Fork
+
+```bash
+git clone https://github.com/YOUR_USERNAME/OpenHooks.git
+cd OpenHooks
+```
+
+</Step>
+
+<Step>
+
+### Install Dependencies
+
+```bash
+# Install CLI dependencies
+cd cli && npm install
+
+# Install docs dependencies
+cd ../docs && npm install
+```
+
+</Step>
+
+<Step>
+
+### Create a Branch
+
+```bash
+git checkout -b feature/your-new-hook
+# or
+git checkout -b fix/bug-description
+```
+
+</Step>
+
+</Steps>
+
+---
+
+## 🪝 Contributing Hooks
+
+### Hook Requirements
+
+All hooks must meet these criteria:
+
+- ✅ **Reusable**: Solves a common React pattern
+- ✅ **Well-tested**: Includes comprehensive unit tests
+- ✅ **Documented**: Has complete documentation with examples
+- ✅ **TypeScript**: Full TypeScript support with proper types
+- ✅ **Performance**: Optimized for production use
+- ✅ **Accessible**: Considers accessibility when applicable
+
+### Hook Structure
+
+<Steps>
+
+<Step>
+
+### Create the Hook Files
+
+Create both TypeScript and JavaScript versions:
+
+```
+hooks/
+├── ts/
+│   └── useYourHook.ts
+├── js/
+│   └── useYourHook.js
+└── manifest.json (update this)
+```
+
+</Step>
+
+<Step>
+
+### TypeScript Implementation
+
+```ts title="hooks/ts/useYourHook.ts"
+import { useState, useEffect } from "react";
+
+/**
+ * useYourHook - Brief description of what the hook does
+ *
+ * @param {Type} param - Description of the parameter
+ * @returns {ReturnType} Description of what the hook returns
+ *
+ * @example
+ * const result = useYourHook(initialValue);
+ */
+export function useYourHook<T>(
+  param: T,
+  options?: YourHookOptions
+): YourHookReturn<T> {
+  // Implementation here
+
+  return {
+    // Return values
+  };
+}
+
+// Type definitions
+export interface YourHookOptions {
+  // Options interface
+}
+
+export interface YourHookReturn<T> {
+  // Return type interface
+}
+```
+
+</Step>
+
+<Step>
+
+### JavaScript Implementation
+
+```js title="hooks/js/useYourHook.js"
+import { useState, useEffect } from "react";
+
+/**
+ * useYourHook - Brief description of what the hook does
+ *
+ * @param {*} param - Description of the parameter
+ * @returns {Object} Description of what the hook returns
+ *
+ * @example
+ * const result = useYourHook(initialValue);
+ */
+export function useYourHook(param, options = {}) {
+  // Implementation here (same logic as TS version)
+
+  return {
+    // Return values
+  };
+}
+```
+
+</Step>
+
+<Step>
+
+### Update Manifest
+
+Add your hook to `hooks/manifest.json`:
+
+```json
+{
+  "hooks": [
+    {
+      "name": "YourHook",
+      "description": "Brief description of your hook's purpose",
+      "js": true,
+      "ts": true
+    }
+  ]
+}
+```
+
+</Step>
+
+<Step>
+
+### Create Documentation
+
+Create a documentation file in `docs/content/docs/hooks/`:
+
+```mdx title="docs/content/docs/hooks/useYourHook.mdx"
+---
+title: useYourHook
+description: Brief description of what the hook does.
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+
+# useYourHook
+
+> Brief tagline describing the hook's purpose.
+
+## Installation
+
+<Callout>No external dependency needed</Callout>
+
+## Hook Code
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+    <!-- Your TypeScript implementation -->
+  </Tab>
+  <Tab value="JavaScript">
+    <!-- Your JavaScript implementation -->
+  </Tab>
+</Tabs>
+
+## API Reference
+
+<TypeTable
+  type={{
+    param: {
+      type: "Type",
+      description: "Parameter description",
+    },
+  }}
+/>
+
+## Example
+
+<!-- Working example -->
+
+## Best Practices
+
+<!-- Usage guidelines -->
+```
+
+</Step>
+
+</Steps>
+
+---
+
+## 🧪 Testing
+
+### Writing Tests
+
+All hooks must include comprehensive tests:
+
+```ts title="hooks/__tests__/useYourHook.test.ts"
+import { renderHook, act } from "@testing-library/react";
+import { useYourHook } from "../ts/useYourHook";
+
+describe("useYourHook", () => {
+  it("should handle initial state correctly", () => {
+    const { result } = renderHook(() => useYourHook(initialValue));
+
+    expect(result.current.value).toBe(expectedValue);
+  });
+
+  it("should update state when action is triggered", () => {
+    const { result } = renderHook(() => useYourHook(initialValue));
+
+    act(() => {
+      result.current.action();
+    });
+
+    expect(result.current.value).toBe(expectedNewValue);
+  });
+
+  it("should handle edge cases", () => {
+    // Test edge cases and error conditions
+  });
+
+  it("should cleanup properly", () => {
+    // Test cleanup and memory leaks
+  });
+});
+```
+
+### Running Tests
+
+```bash
+cd hooks
+npm test useYourHook
+```
+
+---
+
+## 📝 Documentation Guidelines
+
+### Writing Style
+
+- **Clear and concise**: Use simple, direct language
+- **Practical examples**: Show real-world usage patterns
+- **Complete API docs**: Document all parameters and return values
+- **Best practices**: Include do's and don'ts
+
+### Documentation Sections
+
+Required sections for hook documentation:
+
+1. **Title and Description**: Clear hook purpose
+2. **Installation**: How to get the hook
+3. **Quick Start**: Basic usage example
+4. **API Reference**: Complete parameter and return documentation
+5. **Examples**: Real-world usage patterns
+6. **Best Practices**: Guidelines and tips
+7. **Troubleshooting**: Common issues and solutions
+
+---
+
+## 🔍 Code Review Process
+
+### Submission Checklist
+
+Before submitting your PR, ensure:
+
+- [ ] Hook works in both TypeScript and JavaScript
+- [ ] Comprehensive tests are included and passing
+- [ ] Documentation is complete and follows guidelines
+- [ ] Examples are practical and working
+- [ ] Code follows project conventions
+- [ ] No breaking changes to existing APIs
+
+### Review Criteria
+
+We review contributions based on:
+
+- **Functionality**: Does it solve a real problem?
+- **Code Quality**: Is the implementation clean and efficient?
+- **Documentation**: Is it well-documented with examples?
+- **Tests**: Are there sufficient tests covering edge cases?
+- **API Design**: Is the API intuitive and consistent?
+
+---
+
+## 🛠️ Development Setup
+
+### Project Structure
+
+```
+OpenHooks/
+├── cli/                 # CLI tool source code
+├── hooks/              # Hook implementations
+│   ├── js/            # JavaScript versions
+│   ├── ts/            # TypeScript versions
+│   ├── __tests__/     # Test files
+│   └── manifest.json  # Hook registry
+├── docs/              # Documentation site
+└── README.md
+```
+
+### Development Commands
+
+```bash
+# Test hooks
+cd hooks && npm test
+
+# Build CLI
+cd cli && npm run build
+
+# Run docs locally
+cd docs && npm run dev
+
+# Lint code
+npm run lint
+
+# Format code
+npm run format
+```
+
+---
+
+## 🚀 Release Process
+
+### Versioning
+
+We follow [Semantic Versioning](https://semver.org/):
+
+- **Patch** (1.0.1): Bug fixes and small improvements
+- **Minor** (1.1.0): New hooks and features
+- **Major** (2.0.0): Breaking changes
+
+### Publishing
+
+1. **Version bump**: Update version in `package.json`
+2. **Changelog**: Update `CHANGELOG.md` with changes
+3. **Tag release**: Create Git tag for the version
+4. **Publish**: CLI is published to npm automatically
+
+---
+
+## 🤝 Community Guidelines
+
+### Code of Conduct
+
+- Be respectful and inclusive
+- Provide constructive feedback
+- Help others learn and grow
+- Follow project guidelines
+
+### Getting Help
+
+- **Questions**: Open a GitHub Discussion
+- **Bugs**: Create an issue with reproduction steps
+- **Features**: Propose new ideas in Discussions first
+
+---
+
+## 🎉 Recognition
+
+Contributors are recognized in:
+
+- **README**: Listed in the contributors section
+- **Changelog**: Credited for specific contributions
+- **Documentation**: Author attribution on hook pages
+
+---
+
+<Callout type="success">
+  Ready to contribute? Start by [forking the
+  repository](https://github.com/Rajeshkumar02/OpenHooks/fork) and picking your
+  first issue!
+</Callout>
