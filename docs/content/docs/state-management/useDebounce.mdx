@@ -1,0 +1,865 @@
+---
+title: useDebounce
+description: Delay value until after a specified delay period to optimize performance and reduce API calls.
+tags: ["react", "hooks", "state", "performance", "debounce"]
+status: stable
+version: 1.2.0
+lastUpdated: "2025-09-07"
+author: "OpenHooks Team"
+category: "state-management"
+difficulty: beginner
+bundle_size: "~0.6kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Search, Timer, Zap, Database } from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useDebounce/Example";
+
+# useDebounce
+
+> Delay value updates until after a specified delay period to optimize performance and reduce unnecessary API calls.
+
+<MetaInfo
+  status="stable"
+  version="1.2.0"
+  bundleSize="~0.6kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+  <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```tsx
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import {
+  useDebounce,
+  type TimeUnit,
+  type DebounceOptions,
+} from "@/hooks/useDebounce";
+
+export default function DebounceAxiosExample() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Debounce config
+  const [delay] = useState(500);
+  const [unit] = useState<TimeUnit>("ms");
+  const config: DebounceOptions = { delay, unit };
+  const debouncedSearch = useDebounce(searchTerm, config);
+
+  // Fetch data function
+  const fetchPosts = async (query: string) => {
+    setIsLoading(true);
+    try {
+      const url = query
+        ? `https://jsonplaceholder.typicode.com/users?q=${query}&_limit=5`
+        : `https://jsonplaceholder.typicode.com/users?_limit=5`; // initial fetch
+      const res = await axios.get(url);
+      setResults(res.data);
+    } catch (error) {
+      console.error("API error:", error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchPosts("");
+  }, []);
+
+  // Search effect
+  useEffect(() => {
+    if (debouncedSearch.trim()) {
+      fetchPosts(debouncedSearch);
+    } else {
+      fetchPosts("");
+    }
+  }, [debouncedSearch]);
+
+  return (
+    <div className="w-full max-w-lg mx-auto p-6 space-y-4">
+      <div className="flex items-center gap-2">
+        <Search className="w-5 h-5 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search posts..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button variant="outline" size="sm" onClick={() => setSearchTerm("")}>
+          Reset
+        </Button>
+      </div>
+
+      {isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
+
+      <ul>
+        {!isLoading &&
+          results.length > 0 &&
+          results?.map((item) => (
+            <li key={item?.id}>
+              <div className="text-sm font-medium">
+                <div>Name: {item?.username}</div>
+                <div>Email: {item?.email}</div>
+              </div>
+            </li>
+          ))}
+      </ul>
+
+      {!isLoading && results.length === 0 && debouncedSearch && (
+        <p className="text-sm text-muted-foreground">No results found.</p>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```jsx
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
+
+export default function DebounceAxiosExample() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Debounce config
+  const delay = 500;
+  const unit = "ms";
+  const config = { delay, unit };
+  const debouncedSearch = useDebounce(searchTerm, config);
+
+  // Fetch data function
+  const fetchUsers = async (query) => {
+    setIsLoading(true);
+    try {
+      const url = query
+        ? `https://jsonplaceholder.typicode.com/users?q=${query}&_limit=5`
+        : `https://jsonplaceholder.typicode.com/users?_limit=5`; // initial fetch
+      const res = await axios.get(url);
+      setResults(res.data);
+    } catch (error) {
+      console.error("API error:", error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchUsers("");
+  }, []);
+
+  // Search effect
+  useEffect(() => {
+    if (debouncedSearch.trim()) {
+      fetchUsers(debouncedSearch);
+    } else {
+      fetchUsers("");
+    }
+  }, [debouncedSearch]);
+
+  return (
+    <div className="w-full max-w-lg mx-auto p-6 space-y-4">
+      <div className="flex items-center gap-2">
+        <Search className="w-5 h-5 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button variant="outline" size="sm" onClick={() => setSearchTerm("")}>
+          Reset
+        </Button>
+      </div>
+
+      {isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
+
+      <ul>
+        {!isLoading &&
+          results.length > 0 &&
+          results.map((item) => (
+            <li key={item.id}>
+              <div className="text-sm font-medium">
+                <div>Name: {item.username}</div>
+                <div>Email: {item.email}</div>
+              </div>
+            </li>
+          ))}
+      </ul>
+
+      {!isLoading && results.length === 0 && debouncedSearch && (
+        <p className="text-sm text-muted-foreground">No results found.</p>
+      )}
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+
+<Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+  <Tab value="npm">
+
+```bash
+npx open-hook add useDebounce
+```
+
+  </Tab>
+  <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useDebounce
+```
+
+  </Tab>
+  <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useDebounce
+```
+
+  </Tab>
+</Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+
+<Callout type="info">
+  No external dependencies needed - just React 16.8+
+</Callout>
+
+<Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+  <Tab value="TypeScript">
+
+```ts title="hooks/useDebounce.ts"
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+
+export type TimeUnit = "ms" | "s" | "min";
+
+export interface DebounceOptions {
+  delay: number;
+  unit?: TimeUnit;
+  leading?: boolean;
+  trailing?: boolean;
+  maxWait?: number;
+}
+export function useDebounce<T>(
+  value: T,
+  options: number | DebounceOptions = 500
+): T {
+  const [debounced, setDebounced] = useState(value);
+  const lastValueRef = useRef(value);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const maxTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastExecRef = useRef<number>(0);
+
+  // Parse options
+  const config: DebounceOptions =
+    typeof options === "number"
+      ? { delay: options, unit: "ms", leading: false, trailing: true }
+      : { unit: "ms", leading: false, trailing: true, ...options };
+
+  // Convert delay to milliseconds
+  const getDelayInMs = (delay: number, unit: TimeUnit = "ms"): number => {
+    switch (unit) {
+      case "s":
+        return delay * 1000;
+      case "min":
+        return delay * 60 * 1000;
+      default:
+        return delay;
+    }
+  };
+
+  const delayMs = getDelayInMs(config.delay, config.unit);
+  const maxWaitMs = config.maxWait
+    ? getDelayInMs(config.maxWait, config.unit)
+    : undefined;
+
+  useEffect(() => {
+    const now = Date.now();
+    lastValueRef.current = value;
+
+    // Clear existing timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Leading edge execution
+    if (config.leading && now - lastExecRef.current >= delayMs) {
+      setDebounced(value);
+      lastExecRef.current = now;
+      return;
+    }
+
+    // Set up trailing edge execution
+    if (config.trailing) {
+      timeoutRef.current = setTimeout(() => {
+        setDebounced(lastValueRef.current);
+        lastExecRef.current = Date.now();
+        if (maxTimeoutRef.current) {
+          clearTimeout(maxTimeoutRef.current);
+        }
+      }, delayMs);
+    }
+
+    // Set up max wait timeout
+    if (maxWaitMs && !maxTimeoutRef.current) {
+      maxTimeoutRef.current = setTimeout(() => {
+        setDebounced(lastValueRef.current);
+        lastExecRef.current = Date.now();
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      }, maxWaitMs);
+    }
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (maxTimeoutRef.current) {
+        clearTimeout(maxTimeoutRef.current);
+        maxTimeoutRef.current = null;
+      }
+    };
+  }, [value, delayMs, config.leading, config.trailing, maxWaitMs]);
+
+  return debounced;
+}
+```
+
+  </Tab>
+  <Tab value="JavaScript">
+
+```js title="hooks/useDebounce.js"
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+
+export function useDebounce(value, options = 500) {
+  const [debounced, setDebounced] = useState(value);
+  const lastValueRef = useRef(value);
+  const timeoutRef = useRef(null);
+  const maxTimeoutRef = useRef(null);
+  const lastExecRef = useRef(0);
+
+  // Parse options
+  const config =
+    typeof options === "number"
+      ? { delay: options, unit: "ms", leading: false, trailing: true }
+      : { unit: "ms", leading: false, trailing: true, ...options };
+
+  // Convert delay to milliseconds
+  const getDelayInMs = (delay, unit = "ms") => {
+    switch (unit) {
+      case "s":
+        return delay * 1000;
+      case "min":
+        return delay * 60 * 1000;
+      default:
+        return delay;
+    }
+  };
+
+  const delayMs = getDelayInMs(config.delay, config.unit);
+  const maxWaitMs = config.maxWait
+    ? getDelayInMs(config.maxWait, config.unit)
+    : undefined;
+
+  useEffect(() => {
+    const now = Date.now();
+    lastValueRef.current = value;
+
+    // Clear existing timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Leading edge execution
+    if (config.leading && now - lastExecRef.current >= delayMs) {
+      setDebounced(value);
+      lastExecRef.current = now;
+      return;
+    }
+
+    // Set up trailing edge execution
+    if (config.trailing) {
+      timeoutRef.current = setTimeout(() => {
+        setDebounced(lastValueRef.current);
+        lastExecRef.current = Date.now();
+        if (maxTimeoutRef.current) {
+          clearTimeout(maxTimeoutRef.current);
+        }
+      }, delayMs);
+    }
+
+    // Set up max wait timeout
+    if (maxWaitMs && !maxTimeoutRef.current) {
+      maxTimeoutRef.current = setTimeout(() => {
+        setDebounced(lastValueRef.current);
+        lastExecRef.current = Date.now();
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      }, maxWaitMs);
+    }
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (maxTimeoutRef.current) {
+        clearTimeout(maxTimeoutRef.current);
+        maxTimeoutRef.current = null;
+      }
+    };
+  }, [value, delayMs, config.leading, config.trailing, maxWaitMs]);
+
+  return debounced;
+}
+```
+
+  </Tab>
+</Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    value: {
+      type: "T",
+      description: "The value to debounce (can be any type)",
+    },
+    options: {
+      type: "number | DebounceOptions",
+      description: "Delay in milliseconds or advanced configuration object",
+      default: "500",
+    },
+  }}
+/>
+
+### DebounceOptions
+
+<TypeTable
+  type={{
+    delay: {
+      type: "number",
+      description: "The delay before updating the debounced value",
+    },
+    unit: {
+      type: "TimeUnit",
+      description: "Time unit: 'ms' | 's' | 'min'",
+      default: "'ms'",
+    },
+    leading: {
+      type: "boolean",
+      description: "Trigger on the leading edge (immediately on first call)",
+      default: "false",
+    },
+    trailing: {
+      type: "boolean",
+      description: "Trigger on the trailing edge (after delay)",
+      default: "true",
+    },
+    maxWait: {
+      type: "number",
+      description: "Maximum time to wait before forcing an update",
+      optional: true,
+    },
+  }}
+/>
+
+### Returns
+
+<TypeTable
+  type={{
+    debouncedValue: {
+      type: "T",
+      description: "The debounced value that updates after the specified delay",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+type TimeUnit = "ms" | "s" | "min";
+
+interface DebounceOptions {
+  delay: number;
+  unit?: TimeUnit;
+  leading?: boolean;
+  trailing?: boolean;
+  maxWait?: number;
+}
+
+function useDebounce<T>(value: T, options?: number | DebounceOptions): T;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["Simple", "Time Units", "Leading Edge", "Max Wait"]}>
+  <Tab value="Simple">
+
+```tsx
+// Basic usage with milliseconds
+const debouncedValue = useDebounce(searchTerm, 300);
+```
+
+  </Tab>
+  <Tab value="Time Units">
+
+```tsx
+// Using different time units
+const debouncedValue = useDebounce(value, {
+  delay: 1,
+  unit: "s", // 1 second
+});
+
+const debouncedValue2 = useDebounce(value, {
+  delay: 2,
+  unit: "min", // 2 minutes
+});
+```
+
+  </Tab>
+  <Tab value="Leading Edge">
+
+```tsx
+// Trigger immediately on first change
+const debouncedValue = useDebounce(searchTerm, {
+  delay: 300,
+  leading: true, // Immediate first trigger
+  trailing: true, // Also trigger after delay
+});
+```
+
+  </Tab>
+  <Tab value="Max Wait">
+
+```tsx
+// Force update after maximum wait time
+const debouncedValue = useDebounce(value, {
+  delay: 500,
+  maxWait: 2000, // Force update after 2 seconds max
+});
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Choose appropriate delay values and configurations based on your use case:
+
+```tsx
+// Search input - fast feedback with leading edge
+const debouncedSearch = useDebounce(searchTerm, {
+  delay: 300,
+  leading: true,
+  trailing: true,
+});
+
+// Form validation - moderate delay, trailing only
+const debouncedInput = useDebounce(inputValue, {
+  delay: 500,
+  trailing: true,
+});
+
+// Auto-save with maximum wait time
+const debouncedData = useDebounce(formData, {
+  delay: 800,
+  maxWait: 5000, // Force save after 5 seconds
+});
+```
+
+</Callout>
+
+### Advanced Features
+
+- **🚀 Time Units**: Use seconds or minutes for longer delays instead of calculating milliseconds
+- **⚡ Leading Edge**: Get immediate feedback on first interaction
+- **⏱️ Max Wait**: Ensure updates don't get delayed indefinitely
+- **🎯 Trailing Edge**: Standard debounce behavior (default)
+
+### Do's and Don'ts
+
+- ✅ Use leading edge for immediate user feedback
+- ✅ Set maxWait for auto-save functionality
+- ✅ Choose appropriate time units for readability
+- ✅ Use simple number for basic debouncing
+- ❌ Don't use excessively long delays (>5min)
+- ❌ Avoid both leading and trailing false
+- ❌ Don't use complex configs for simple cases
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~0.6kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "API Calls Reduced",
+      value: "Up to 90%",
+      description: "Fewer unnecessary requests",
+    },
+    {
+      metric: "Memory",
+      value: "Minimal",
+      description: "Single timer per instance",
+    },
+    {
+      metric: "CPU Impact",
+      value: "Very Low",
+      description: "Simple setTimeout operation",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome (latest)", supported: true, notes: "Full support" },
+    { name: "Firefox (latest)", supported: true, notes: "Full support" },
+    { name: "Safari (latest)", supported: true, notes: "Full support" },
+    { name: "Edge (latest)", supported: true, notes: "Full support" },
+    { name: "IE 11", supported: false, notes: "Not supported" },
+    { name: "Node.js", supported: true, notes: "For SSR environments" },
+  ]}
+/>
+
+## Use Cases
+
+### <Search className="inline w-4 h-4 mr-2" /> Search Functionality
+
+Delay search API calls until the user stops typing to improve performance.
+
+### <Timer className="inline w-4 h-4 mr-2" /> Auto-save Features
+
+Automatically save form data after the user pauses editing.
+
+### <Zap className="inline w-4 h-4 mr-2" /> Form Validation
+
+Delay expensive validation checks until input stabilizes.
+
+### <Database className="inline w-4 h-4 mr-2" /> Filter Operations
+
+Reduce heavy filtering operations on large datasets.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - The hook doesn't affect accessibility directly - Ensure loading states are
+  communicated to screen readers - Consider providing immediate feedback for
+  user interactions - Use appropriate ARIA labels for search inputs using
+  debounced values
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="Debounce not working">
+
+**Solution:** Ensure you're using the debounced value in your effects, not the original value.
+
+```tsx
+// ❌ Wrong - using original value
+useEffect(() => {
+  fetchData(searchTerm);
+}, [searchTerm]);
+
+// ✅ Correct - using debounced value
+useEffect(() => {
+  fetchData(debouncedSearch);
+}, [debouncedSearch]);
+```
+
+</Accordion>
+
+<Accordion title="Delay seems too long/short">
+
+**Solution:** Adjust the delay based on your specific use case:
+
+- Search: 200-400ms
+- Validation: 300-600ms
+- Auto-save: 500-1000ms
+
+</Accordion>
+
+<Accordion title="Multiple API calls still happening">
+
+**Solution:** Make sure you're properly cleaning up any ongoing requests:
+
+```tsx
+useEffect(() => {
+  const controller = new AbortController();
+
+  if (debouncedValue) {
+    fetchData(debouncedValue, { signal: controller.signal });
+  }
+
+  return () => controller.abort();
+}, [debouncedValue]);
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook maintains an internal state for the debounced value and uses `setTimeout` to delay updates. Each time the input value changes, it clears the previous timer and sets a new one. Only when the timer completes without interruption does it update the debounced value.
+
+This pattern effectively "debounces" rapid changes, ensuring that expensive operations (like API calls) only happen after the user has stopped providing input for the specified delay period.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook, act } from "@testing-library/react";
+import { useDebounce } from "./useDebounce";
+
+jest.useFakeTimers();
+
+it("debounces value updates", () => {
+  const { result, rerender } = renderHook(
+    ({ value, delay }) => useDebounce(value, delay),
+    { initialProps: { value: "initial", delay: 500 } }
+  );
+
+  expect(result.current).toBe("initial");
+
+  // Update value
+  rerender({ value: "updated", delay: 500 });
+  expect(result.current).toBe("initial"); // Still old value
+
+  // Fast forward time
+  act(() => {
+    jest.advanceTimersByTime(500);
+  });
+
+  expect(result.current).toBe("updated"); // Now updated
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="What's the difference between debounce and throttle?">
+
+**Debounce** delays execution until after a period of inactivity, while **throttle** limits execution to once per time period. Debounce is better for search inputs, throttle is better for scroll handlers.
+
+</Accordion>
+
+<Accordion title="Can I debounce objects or arrays?">
+
+Yes! The hook is generic and works with any type:
+
+```tsx
+const debouncedFilter = useDebounce(filterObject, 300);
+const debouncedItems = useDebounce(itemsArray, 500);
+```
+
+</Accordion>
+
+<Accordion title="What happens on component unmount?">
+
+The hook automatically cleans up the timeout to prevent memory leaks and potential state updates on unmounted components.
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useThrottle](../useThrottle) - Limit execution frequency instead of delaying
+- [useAsyncState](../useAsyncState) - Handle async operations with loading states
+- [useLocalStorage](../useLocalStorage) - Persist debounced values locally
+
+## Changelog
+
+- **2.0.0** — Major release with advanced features
+  - Added support for multiple time units (ms, s, min)
+  - Implemented leading edge execution option
+  - Added trailing edge configuration
+  - Introduced maxWait option for forced updates
+  - Enhanced TypeScript support with DebounceOptions interface
+  - Breaking: Changed API to accept options object
+  - Improved memory management with proper cleanup
+- **1.2.0** — Added TypeScript generics and improved performance
+- **1.1.0** — Added configurable delay parameter
+- **1.0.0** — Initial release with basic debounce functionality

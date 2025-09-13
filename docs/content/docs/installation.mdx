@@ -1,0 +1,326 @@
+---
+title: Installation
+description: Step-by-step guide to install and configure OpenHooks CLI for your React projects.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+# Installation Guide
+
+Get OpenHooks up and running in your React project with our simple CLI tool.
+
+---
+
+## 📋 Prerequisites
+
+Before installing OpenHooks, make sure you have:
+
+- **Node.js** 18.0.0 or higher
+- **npm**, **yarn**, or **pnpm** package manager
+- A **React project** (16.8+ with hooks support)
+
+<Callout type="info">
+  OpenHooks works with any React framework: Create React App, Next.js, Vite,
+  Remix, and more.
+</Callout>
+
+---
+
+## 🚀 Quick Installation
+
+<Steps>
+
+<Step>
+
+### Install the CLI Globally
+
+<Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+  <Tab value="npm">
+
+```bash
+npm install -g open-hook
+```
+
+  </Tab>
+  <Tab value="yarn">
+
+```bash
+yarn global add open-hook
+```
+
+  </Tab>
+  <Tab value="pnpm">
+
+```bash
+pnpm add -g open-hook
+```
+
+  </Tab>
+</Tabs>
+
+</Step>
+
+<Step>
+
+### Verify Installation
+
+```bash
+open-hook --version
+```
+
+You should see the current version number displayed.
+
+</Step>
+
+<Step>
+
+### Initialize Your Project
+
+Navigate to your React project and run:
+
+```bash
+open-hook init
+```
+
+This creates a configuration file and sets up the hooks directory structure.
+
+</Step>
+
+<Step>
+
+### Install Your First Hook
+
+```bash
+open-hook add useClickOutside
+```
+
+The hook will be downloaded and ready to use in your project!
+
+</Step>
+
+</Steps>
+
+---
+
+## ⚙️ Configuration
+
+When you run `open-hook init`, it creates a `.openhook.json` configuration file:
+
+```json title=".openhook.json"
+{
+  "language": "ts",
+  "hooksDir": "./hooks",
+  "repoUrl": "https://api.github.com/repos/Rajeshkumar02/OpenHooks"
+}
+```
+
+### Configuration Options
+
+| Option     | Description                  | Default                 | Options             |
+| ---------- | ---------------------------- | ----------------------- | ------------------- |
+| `language` | Preferred language for hooks | `"ts"`                  | `"ts"` \| `"js"`    |
+| `hooksDir` | Directory to install hooks   | `"./hooks"`             | Any valid path      |
+| `repoUrl`  | Source repository URL        | Official OpenHooks repo | Any compatible repo |
+
+<Callout type="tip">
+  You can modify these settings anytime by editing the `.openhook.json` file or
+  running `open-hook init` again.
+</Callout>
+
+---
+
+## 📦 CLI Commands
+
+### `open-hook init`
+
+Initialize OpenHooks in your project
+
+```bash
+open-hook init
+```
+
+### `open-hook add [hooks...]`
+
+Install one or more hooks
+
+```bash
+# Install a single hook
+open-hook add useClickOutside
+
+# Install multiple hooks
+open-hook add useClickOutside useDebounce useLocalStorage
+
+# Install with specific language
+open-hook add useClickOutside --language js
+
+# Install to specific directory
+open-hook add useClickOutside --dir ./src/hooks
+```
+
+### `open-hook list`
+
+View all available hooks
+
+```bash
+open-hook list
+```
+
+### `open-hook --help`
+
+Show help information
+
+```bash
+open-hook --help
+```
+
+---
+
+## 🏗️ Project Structure
+
+After installation, your project structure will look like this:
+
+```
+your-react-project/
+├── .openhook.json          # Configuration file
+├── hooks/                  # Hooks directory
+│   ├── manifest.json      # Installed hooks metadata
+│   ├── useClickOutside.ts  # Your installed hooks
+│   └── useDebounce.ts
+├── src/
+│   └── components/
+│       └── MyComponent.tsx # Use hooks here
+└── package.json
+```
+
+---
+
+## 🔧 Framework-Specific Setup
+
+### Next.js
+
+OpenHooks works out of the box with Next.js. No additional configuration needed.
+
+```tsx title="components/Modal.tsx"
+import { useClickOutside } from "../hooks/useClickOutside";
+
+export default function Modal() {
+  // Use your hook here
+}
+```
+
+### Create React App
+
+Works seamlessly with CRA. Import hooks from the relative path:
+
+```tsx title="src/components/Modal.tsx"
+import { useClickOutside } from "../hooks/useClickOutside";
+
+export default function Modal() {
+  // Use your hook here
+}
+```
+
+### Vite
+
+Perfect compatibility with Vite. No additional setup required.
+
+```tsx title="src/components/Modal.tsx"
+import { useClickOutside } from "../hooks/useClickOutside";
+
+export default function Modal() {
+  // Use your hook here
+}
+```
+
+### TypeScript Projects
+
+OpenHooks provides full TypeScript support:
+
+```tsx
+import { useClickOutside } from "./hooks/useClickOutside";
+
+// Full type safety and IntelliSense support
+const ref = useRef<HTMLDivElement>(null);
+useClickOutside(ref, () => console.log("Clicked outside!"));
+```
+
+---
+
+## 🔄 Updating Hooks
+
+To update to the latest version of hooks:
+
+1. **Update the CLI**:
+
+   ```bash
+   npm update -g open-hook
+   ```
+
+2. **Reinstall hooks** (they'll be updated automatically):
+   ```bash
+   open-hook add useClickOutside
+   ```
+
+<Callout type="info">
+  The CLI will prompt you if a newer version of an existing hook is available.
+</Callout>
+
+---
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+**Issue**: `open-hook: command not found`  
+**Solution**: Make sure you installed the CLI globally and restart your terminal.
+
+**Issue**: Permission denied during global installation  
+**Solution**: Use `sudo` on macOS/Linux or run as administrator on Windows.
+
+**Issue**: Hooks not found after installation  
+**Solution**: Check the `hooksDir` path in your `.openhook.json` file.
+
+**Issue**: TypeScript errors with imported hooks  
+**Solution**: Ensure your `tsconfig.json` includes the hooks directory.
+
+### Getting Help
+
+- 📖 Check our [documentation](/docs/hooks)
+- 🐛 Report issues on [GitHub](https://github.com/Rajeshkumar02/OpenHooks/issues)
+- 💬 Join our community discussions
+
+---
+
+## ✅ Verification
+
+After installation, verify everything works:
+
+```tsx title="test-component.tsx"
+import { useRef, useState } from "react";
+import { useClickOutside } from "./hooks/useClickOutside";
+
+function TestComponent() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useClickOutside(ref, () => setIsOpen(false));
+
+  return (
+    <div>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      {isOpen && (
+        <div ref={ref} style={{ padding: "20px", background: "#f0f0f0" }}>
+          Click outside to close this modal
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+<Callout type="success">
+  🎉 **Congratulations!** You've successfully installed OpenHooks. Ready to
+  explore our [hook collection](/docs/hooks)?
+</Callout>

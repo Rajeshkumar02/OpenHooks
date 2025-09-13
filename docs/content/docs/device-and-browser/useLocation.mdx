@@ -1,0 +1,1354 @@
+---
+title: useLocation
+description: Track and manage browser location, URL parameters, and navigation state in React applications.
+tags: ["react", "hooks", "location", "url", "navigation", "router"]
+status: stable
+version: 2.0.0
+lastUpdated: "2025-09-13"
+author: "OpenHooks Team"
+category: "device-and-browser"
+difficulty: intermediate
+bundle_size: "~1.2kb"
+dependencies: ["react"]
+---
+
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import {
+  Tabs as ShadcnTabs,
+  TabsContent as ShadcnTabsContent,
+  TabsList as ShadcnTabsList,
+  TabsTrigger as ShadcnTabsTrigger,
+} from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Callout } from "fumadocs-ui/components/callout";
+import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import {
+  MapPin,
+  Navigation,
+  Globe,
+  ArrowRight,
+  History,
+  Bookmark,
+} from "lucide-react";
+import CodePreview from "@/components/CodePreview";
+import { MetaInfo } from "@/components/MetaInfo";
+import {
+  BrowserCompatibility,
+  PerformanceMetrics,
+} from "@/components/CompatibilityTable";
+import ExampleComponent from "@/examples/useLocation/Example";
+
+# useLocation
+
+> Track and manage browser location, URL parameters, and navigation state in React applications.
+
+<MetaInfo
+  status="stable"
+  version="2.0.0"
+  bundleSize="~1.2kb"
+  requires="React 16.8+"
+/>
+
+<ShadcnTabs defaultValue="Preview">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="Preview">Preview</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Code">Code</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="Preview">
+    <AspectRatio ratio={16 / 9} className="w-full rounded-md border">
+    <div className="w-full h-full overflow-auto p-4">
+        <ExampleComponent />
+    </div>
+    </AspectRatio>
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Code">
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```tsx
+import { useLocation } from "@/hooks/useLocation";
+
+function NavigationComponent() {
+  const { location, searchParams, hash, navigate, back, forward, reload } =
+    useLocation();
+
+  return (
+    <div>
+      <h3>Current Location</h3>
+      <p>Path: {location.pathname}</p>
+      <p>Search: {location.search}</p>
+      <p>Hash: {hash}</p>
+
+      <h3>URL Parameters</h3>
+      {Array.from(searchParams.entries()).map(([key, value]) => (
+        <p key={key}>
+          {key}: {value}
+        </p>
+      ))}
+
+      <div>
+        <button onClick={() => navigate("/new-path")}>
+          Navigate to /new-path
+        </button>
+        <button onClick={() => navigate("?tab=settings")}>
+          Add Query Param
+        </button>
+        <button onClick={back}>Back</button>
+        <button onClick={forward}>Forward</button>
+        <button onClick={reload}>Reload</button>
+      </div>
+    </div>
+  );
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```jsx
+import { useLocation } from "@/hooks/useLocation";
+
+function NavigationComponent() {
+  const { location, searchParams, hash, navigate, back, forward, reload } =
+    useLocation();
+
+  return (
+    <div>
+      <h3>Current Location</h3>
+      <p>Path: {location.pathname}</p>
+      <p>Search: {location.search}</p>
+      <p>Hash: {hash}</p>
+
+      <h3>URL Parameters</h3>
+      {Array.from(searchParams.entries()).map(([key, value]) => (
+        <p key={key}>
+          {key}: {value}
+        </p>
+      ))}
+
+      <div>
+        <button onClick={() => navigate("/new-path")}>
+          Navigate to /new-path
+        </button>
+        <button onClick={() => navigate("?tab=settings")}>
+          Add Query Param
+        </button>
+        <button onClick={back}>Back</button>
+        <button onClick={forward}>Forward</button>
+        <button onClick={reload}>Reload</button>
+      </div>
+    </div>
+  );
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## Installation
+
+<ShadcnTabs defaultValue="CLI">
+  <ShadcnTabsList>
+    <ShadcnTabsTrigger value="CLI">CLI</ShadcnTabsTrigger>
+    <ShadcnTabsTrigger value="Manual">Manual</ShadcnTabsTrigger>
+  </ShadcnTabsList>
+  <ShadcnTabsContent value="CLI">
+    <Tabs groupId="package-manager" items={["npm", "yarn", "pnpm"]}>
+      <Tab value="npm">
+
+```bash
+npx open-hook add useLocation
+```
+
+      </Tab>
+      <Tab value="yarn">
+
+```bash
+yarn dlx open-hook add useLocation
+```
+
+      </Tab>
+      <Tab value="pnpm">
+
+```bash
+pnpm dlx open-hook add useLocation
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+  <ShadcnTabsContent value="Manual">
+    <Callout type="info">
+      No external dependencies needed - just React 16.8+
+    </Callout>
+    <Tabs groupId="language" items={["TypeScript", "JavaScript"]}>
+      <Tab value="TypeScript">
+
+```ts title="hooks/useLocation.ts"
+import { useState, useEffect, useCallback } from "react";
+
+interface LocationState {
+  pathname: string;
+  search: string;
+  hash: string;
+  host: string;
+  hostname: string;
+  origin: string;
+  port: string;
+  protocol: string;
+  href: string;
+}
+
+interface UseLocationReturn {
+  location: LocationState;
+  searchParams: URLSearchParams;
+  hash: string;
+  navigate: (url: string, replace?: boolean) => void;
+  back: () => void;
+  forward: () => void;
+  reload: (forceReload?: boolean) => void;
+  setSearchParam: (key: string, value: string) => void;
+  removeSearchParam: (key: string) => void;
+  setHash: (hash: string) => void;
+}
+
+export function useLocation(): UseLocationReturn {
+  const [location, setLocation] = useState<LocationState>(() => ({
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash,
+    host: window.location.host,
+    hostname: window.location.hostname,
+    origin: window.location.origin,
+    port: window.location.port,
+    protocol: window.location.protocol,
+    href: window.location.href,
+  }));
+
+  const [searchParams, setSearchParams] = useState<URLSearchParams>(
+    () => new URLSearchParams(window.location.search)
+  );
+
+  const updateLocation = useCallback(() => {
+    const newLocation: LocationState = {
+      pathname: window.location.pathname,
+      search: window.location.search,
+      hash: window.location.hash,
+      host: window.location.host,
+      hostname: window.location.hostname,
+      origin: window.location.origin,
+      port: window.location.port,
+      protocol: window.location.protocol,
+      href: window.location.href,
+    };
+
+    setLocation(newLocation);
+    setSearchParams(new URLSearchParams(window.location.search));
+  }, []);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      updateLocation();
+    };
+
+    // Listen for popstate events (back/forward buttons)
+    window.addEventListener("popstate", handleLocationChange);
+
+    // Listen for pushstate/replacestate events
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function (...args) {
+      originalPushState.apply(window.history, args);
+      handleLocationChange();
+    };
+
+    window.history.replaceState = function (...args) {
+      originalReplaceState.apply(window.history, args);
+      handleLocationChange();
+    };
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleLocationChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, [updateLocation]);
+
+  const navigate = useCallback(
+    (url: string, replace: boolean = false) => {
+      if (replace) {
+        window.history.replaceState(null, "", url);
+      } else {
+        window.history.pushState(null, "", url);
+      }
+      updateLocation();
+    },
+    [updateLocation]
+  );
+
+  const back = useCallback(() => {
+    window.history.back();
+  }, []);
+
+  const forward = useCallback(() => {
+    window.history.forward();
+  }, []);
+
+  const reload = useCallback((forceReload: boolean = false) => {
+    if (forceReload) {
+      window.location.reload();
+    } else {
+      window.location.reload();
+    }
+  }, []);
+
+  const setSearchParam = useCallback(
+    (key: string, value: string) => {
+      const newSearchParams = new URLSearchParams(window.location.search);
+      newSearchParams.set(key, value);
+      const newUrl = `${
+        window.location.pathname
+      }?${newSearchParams.toString()}${window.location.hash}`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  const removeSearchParam = useCallback(
+    (key: string) => {
+      const newSearchParams = new URLSearchParams(window.location.search);
+      newSearchParams.delete(key);
+      const search = newSearchParams.toString();
+      const newUrl = `${window.location.pathname}${search ? `?${search}` : ""}${
+        window.location.hash
+      }`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  const setHash = useCallback(
+    (hash: string) => {
+      const newHash = hash.startsWith("#") ? hash : `#${hash}`;
+      const newUrl = `${window.location.pathname}${window.location.search}${newHash}`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  return {
+    location,
+    searchParams,
+    hash: location.hash,
+    navigate,
+    back,
+    forward,
+    reload,
+    setSearchParam,
+    removeSearchParam,
+    setHash,
+  };
+}
+```
+
+      </Tab>
+      <Tab value="JavaScript">
+
+```js title="hooks/useLocation.js"
+import { useState, useEffect, useCallback } from "react";
+
+export function useLocation() {
+  const [location, setLocation] = useState(() => ({
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash,
+    host: window.location.host,
+    hostname: window.location.hostname,
+    origin: window.location.origin,
+    port: window.location.port,
+    protocol: window.location.protocol,
+    href: window.location.href,
+  }));
+
+  const [searchParams, setSearchParams] = useState(
+    () => new URLSearchParams(window.location.search)
+  );
+
+  const updateLocation = useCallback(() => {
+    const newLocation = {
+      pathname: window.location.pathname,
+      search: window.location.search,
+      hash: window.location.hash,
+      host: window.location.host,
+      hostname: window.location.hostname,
+      origin: window.location.origin,
+      port: window.location.port,
+      protocol: window.location.protocol,
+      href: window.location.href,
+    };
+
+    setLocation(newLocation);
+    setSearchParams(new URLSearchParams(window.location.search));
+  }, []);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      updateLocation();
+    };
+
+    // Listen for popstate events (back/forward buttons)
+    window.addEventListener("popstate", handleLocationChange);
+
+    // Listen for pushstate/replacestate events
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function (...args) {
+      originalPushState.apply(window.history, args);
+      handleLocationChange();
+    };
+
+    window.history.replaceState = function (...args) {
+      originalReplaceState.apply(window.history, args);
+      handleLocationChange();
+    };
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleLocationChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, [updateLocation]);
+
+  const navigate = useCallback(
+    (url, replace = false) => {
+      if (replace) {
+        window.history.replaceState(null, "", url);
+      } else {
+        window.history.pushState(null, "", url);
+      }
+      updateLocation();
+    },
+    [updateLocation]
+  );
+
+  const back = useCallback(() => {
+    window.history.back();
+  }, []);
+
+  const forward = useCallback(() => {
+    window.history.forward();
+  }, []);
+
+  const reload = useCallback((forceReload = false) => {
+    window.location.reload();
+  }, []);
+
+  const setSearchParam = useCallback(
+    (key, value) => {
+      const newSearchParams = new URLSearchParams(window.location.search);
+      newSearchParams.set(key, value);
+      const newUrl = `${
+        window.location.pathname
+      }?${newSearchParams.toString()}${window.location.hash}`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  const removeSearchParam = useCallback(
+    (key) => {
+      const newSearchParams = new URLSearchParams(window.location.search);
+      newSearchParams.delete(key);
+      const search = newSearchParams.toString();
+      const newUrl = `${window.location.pathname}${search ? `?${search}` : ""}${
+        window.location.hash
+      }`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  const setHash = useCallback(
+    (hash) => {
+      const newHash = hash.startsWith("#") ? hash : `#${hash}`;
+      const newUrl = `${window.location.pathname}${window.location.search}${newHash}`;
+      navigate(newUrl, true);
+    },
+    [navigate]
+  );
+
+  return {
+    location,
+    searchParams,
+    hash: location.hash,
+    navigate,
+    back,
+    forward,
+    reload,
+    setSearchParam,
+    removeSearchParam,
+    setHash,
+  };
+}
+```
+
+      </Tab>
+    </Tabs>
+
+  </ShadcnTabsContent>
+</ShadcnTabs>
+
+## API Reference
+
+### Parameters
+
+This hook takes no parameters.
+
+### Returns
+
+<TypeTable
+  type={{
+    location: {
+      type: "LocationState",
+      description: "Current browser location object with all URL properties",
+    },
+    searchParams: {
+      type: "URLSearchParams",
+      description: "URLSearchParams instance for easy query parameter access",
+    },
+    hash: {
+      type: "string",
+      description: "Current URL hash (including #)",
+    },
+    navigate: {
+      type: "(url: string, replace?: boolean) => void",
+      description:
+        "Navigate to a new URL. Use replace=true to replace current history entry",
+    },
+    back: {
+      type: "() => void",
+      description: "Navigate back in history",
+    },
+    forward: {
+      type: "() => void",
+      description: "Navigate forward in history",
+    },
+    reload: {
+      type: "(forceReload?: boolean) => void",
+      description: "Reload the current page",
+    },
+    setSearchParam: {
+      type: "(key: string, value: string) => void",
+      description: "Add or update a URL search parameter",
+    },
+    removeSearchParam: {
+      type: "(key: string) => void",
+      description: "Remove a URL search parameter",
+    },
+    setHash: {
+      type: "(hash: string) => void",
+      description: "Set the URL hash (automatically adds # if missing)",
+    },
+  }}
+/>
+
+## TypeScript Signature
+
+```ts
+interface LocationState {
+  pathname: string;
+  search: string;
+  hash: string;
+  host: string;
+  hostname: string;
+  origin: string;
+  port: string;
+  protocol: string;
+  href: string;
+}
+
+interface UseLocationReturn {
+  location: LocationState;
+  searchParams: URLSearchParams;
+  hash: string;
+  navigate: (url: string, replace?: boolean) => void;
+  back: () => void;
+  forward: () => void;
+  reload: (forceReload?: boolean) => void;
+  setSearchParam: (key: string, value: string) => void;
+  removeSearchParam: (key: string) => void;
+  setHash: (hash: string) => void;
+}
+
+function useLocation(): UseLocationReturn;
+```
+
+## Advanced Usage Examples
+
+<Tabs groupId="usage" items={["URL Parameters", "Tab Navigation", "Search Filters", "Router Integration"]}>
+  <Tab value="URL Parameters">
+
+```tsx
+function ProductPage() {
+  const { searchParams, setSearchParam, removeSearchParam } = useLocation();
+
+  const category = searchParams.get("category") || "all";
+  const sortBy = searchParams.get("sortBy") || "name";
+  const page = parseInt(searchParams.get("page") || "1");
+
+  const updateFilter = (filter: string, value: string) => {
+    if (value === "all" || !value) {
+      removeSearchParam(filter);
+    } else {
+      setSearchParam(filter, value);
+    }
+    // Reset to page 1 when filtering
+    if (filter !== "page") {
+      setSearchParam("page", "1");
+    }
+  };
+
+  return (
+    <div>
+      <h1>Products</h1>
+
+      <select
+        value={category}
+        onChange={(e) => updateFilter("category", e.target.value)}
+      >
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+      </select>
+
+      <select
+        value={sortBy}
+        onChange={(e) => updateFilter("sortBy", e.target.value)}
+      >
+        <option value="name">Sort by Name</option>
+        <option value="price">Sort by Price</option>
+        <option value="rating">Sort by Rating</option>
+      </select>
+
+      {/* Pagination */}
+      <div>
+        <button
+          onClick={() => updateFilter("page", (page - 1).toString())}
+          disabled={page <= 1}
+        >
+          Previous
+        </button>
+        <span>Page {page}</span>
+        <button onClick={() => updateFilter("page", (page + 1).toString())}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Tab Navigation">
+
+```tsx
+function TabContainer() {
+  const { searchParams, setSearchParam, hash, setHash } = useLocation();
+
+  const activeTab = searchParams.get("tab") || "overview";
+  const activeSection = hash.replace("#", "") || "top";
+
+  const tabs = [
+    { id: "overview", label: "Overview" },
+    { id: "details", label: "Details" },
+    { id: "reviews", label: "Reviews" },
+    { id: "related", label: "Related" },
+  ];
+
+  const sections = {
+    overview: ["intro", "features", "pricing"],
+    details: ["specifications", "requirements", "installation"],
+    reviews: ["recent", "top-rated", "all"],
+    related: ["similar", "alternatives", "bundles"],
+  };
+
+  const switchTab = (tabId: string) => {
+    setSearchParam("tab", tabId);
+    setHash(sections[tabId][0]); // Jump to first section
+  };
+
+  const jumpToSection = (sectionId: string) => {
+    setHash(sectionId);
+  };
+
+  return (
+    <div>
+      {/* Tab Navigation */}
+      <nav>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => switchTab(tab.id)}
+            className={activeTab === tab.id ? "active" : ""}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Section Navigation */}
+      <aside>
+        <h3>Jump to:</h3>
+        {sections[activeTab]?.map((section) => (
+          <button
+            key={section}
+            onClick={() => jumpToSection(section)}
+            className={activeSection === section ? "active" : ""}
+          >
+            {section}
+          </button>
+        ))}
+      </aside>
+
+      {/* Content based on active tab and section */}
+      <main>
+        <TabContent activeTab={activeTab} activeSection={activeSection} />
+      </main>
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Search Filters">
+
+```tsx
+function SearchPage() {
+  const { searchParams, setSearchParam, removeSearchParam, navigate } =
+    useLocation();
+
+  const query = searchParams.get("q") || "";
+  const type = searchParams.get("type") || "all";
+  const dateRange = searchParams.get("date") || "all";
+  const sortBy = searchParams.get("sort") || "relevance";
+
+  const [searchInput, setSearchInput] = useState(query);
+
+  const updateSearch = (newQuery: string) => {
+    if (newQuery.trim()) {
+      setSearchParam("q", newQuery.trim());
+    } else {
+      removeSearchParam("q");
+    }
+  };
+
+  const clearAllFilters = () => {
+    navigate(window.location.pathname); // Remove all query params
+  };
+
+  const buildShareableLink = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl);
+  };
+
+  const hasActiveFilters = Array.from(searchParams.entries()).length > 0;
+
+  return (
+    <div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          updateSearch(searchInput);
+        }}
+      >
+        <input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Search..."
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <div className="filters">
+        <select
+          value={type}
+          onChange={(e) => setSearchParam("type", e.target.value)}
+        >
+          <option value="all">All Types</option>
+          <option value="posts">Posts</option>
+          <option value="users">Users</option>
+          <option value="comments">Comments</option>
+        </select>
+
+        <select
+          value={dateRange}
+          onChange={(e) => setSearchParam("date", e.target.value)}
+        >
+          <option value="all">All Time</option>
+          <option value="day">Last 24 hours</option>
+          <option value="week">Last week</option>
+          <option value="month">Last month</option>
+        </select>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSearchParam("sort", e.target.value)}
+        >
+          <option value="relevance">Relevance</option>
+          <option value="date">Date</option>
+          <option value="popularity">Popularity</option>
+        </select>
+
+        {hasActiveFilters && (
+          <button onClick={clearAllFilters}>Clear Filters</button>
+        )}
+
+        <button onClick={buildShareableLink}>Share Search</button>
+      </div>
+
+      <SearchResults
+        query={query}
+        type={type}
+        dateRange={dateRange}
+        sortBy={sortBy}
+      />
+    </div>
+  );
+}
+```
+
+  </Tab>
+  <Tab value="Router Integration">
+
+```tsx
+// Custom router hook using useLocation
+function useRouter() {
+  const { location, navigate, back, forward, searchParams } = useLocation();
+
+  const push = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate]
+  );
+
+  const replace = useCallback(
+    (path: string) => {
+      navigate(path, true);
+    },
+    [navigate]
+  );
+
+  const query = useMemo(() => {
+    const params: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  }, [searchParams]);
+
+  return {
+    pathname: location.pathname,
+    search: location.search,
+    hash: location.hash,
+    query,
+    push,
+    replace,
+    back,
+    forward,
+  };
+}
+
+// Route component
+function Route({
+  path,
+  component: Component,
+}: {
+  path: string;
+  component: React.ComponentType<any>;
+}) {
+  const { pathname } = useRouter();
+
+  // Simple path matching (you'd want more sophisticated matching in real apps)
+  const isMatch = pathname === path || pathname.startsWith(path + "/");
+
+  return isMatch ? <Component /> : null;
+}
+
+// App with routing
+function App() {
+  const router = useRouter();
+
+  return (
+    <div>
+      <nav>
+        <button onClick={() => router.push("/")}>Home</button>
+        <button onClick={() => router.push("/about")}>About</button>
+        <button onClick={() => router.push("/contact")}>Contact</button>
+      </nav>
+
+      <main>
+        <Route path="/" component={HomePage} />
+        <Route path="/about" component={AboutPage} />
+        <Route path="/contact" component={ContactPage} />
+      </main>
+
+      <footer>
+        <button onClick={router.back}>← Back</button>
+        <button onClick={router.forward}>Forward →</button>
+        <span>Current: {router.pathname}</span>
+      </footer>
+    </div>
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Callout type="tip">
+Handle URL changes gracefully and maintain URL state consistency:
+
+```tsx
+const { searchParams, setSearchParam, location } = useLocation();
+
+// Always validate URL parameters
+const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+const validSortOptions = ["name", "date", "price"];
+const sortBy = validSortOptions.includes(searchParams.get("sort"))
+  ? searchParams.get("sort")
+  : "name";
+
+// Batch URL updates to avoid multiple history entries
+const updateFilters = (newFilters: Record<string, string>) => {
+  const newSearchParams = new URLSearchParams(location.search);
+
+  Object.entries(newFilters).forEach(([key, value]) => {
+    if (value) {
+      newSearchParams.set(key, value);
+    } else {
+      newSearchParams.delete(key);
+    }
+  });
+
+  const newUrl = `${location.pathname}?${newSearchParams.toString()}`;
+  navigate(newUrl, true); // Replace current entry
+};
+```
+
+</Callout>
+
+### URL Management Guidelines
+
+- **🔗 Shareable URLs**: Keep important state in URL parameters
+- **📱 Deep Linking**: Support direct navigation to specific app states
+- **🔄 History Management**: Use replace for filter updates, push for navigation
+- **✅ Validation**: Always validate URL parameters before using them
+
+### Do's and Don'ts
+
+- ✅ Use URL parameters for shareable application state
+- ✅ Validate URL parameters and provide fallbacks
+- ✅ Batch URL updates to avoid excessive history entries
+- ✅ Provide clear navigation feedback
+- ❌ Don't store sensitive data in URL parameters
+- ❌ Avoid creating too many history entries with rapid updates
+- ❌ Don't rely on URL state for temporary UI state
+- ❌ Avoid breaking the back button behavior
+
+## Performance Metrics
+
+<PerformanceMetrics
+  metrics={[
+    {
+      metric: "Bundle Size",
+      value: "~1.2kb",
+      description: "Minified + gzipped",
+    },
+    {
+      metric: "Update Speed",
+      value: "< 1ms",
+      description: "URL state synchronization",
+    },
+    {
+      metric: "Memory Usage",
+      value: "Low",
+      description: "Minimal state tracking",
+    },
+    {
+      metric: "Browser Events",
+      value: "3 listeners",
+      description: "popstate, hashchange, history",
+    },
+  ]}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  browsers={[
+    { name: "Chrome 4+", supported: true, notes: "Full history API support" },
+    { name: "Firefox 4+", supported: true, notes: "Full history API support" },
+    { name: "Safari 5+", supported: true, notes: "Full history API support" },
+    { name: "Edge 12+", supported: true, notes: "Full history API support" },
+    { name: "IE 10+", supported: true, notes: "Limited history API support" },
+    {
+      name: "Mobile browsers",
+      supported: true,
+      notes: "Modern mobile browsers",
+    },
+  ]}
+/>
+
+## Use Cases
+
+### <MapPin className="inline w-4 h-4 mr-2" /> URL State Management
+
+Keep application state synchronized with URL for shareability and bookmarking.
+
+### <Navigation className="inline w-4 h-4 mr-2" /> Custom Routing
+
+Build lightweight routing solutions without external router libraries.
+
+### <Globe className="inline w-4 h-4 mr-2" /> Deep Linking
+
+Enable direct navigation to specific application states via URLs.
+
+### <ArrowRight className="inline w-4 h-4 mr-2" /> Navigation Control
+
+Programmatically control browser navigation and history.
+
+## Accessibility
+
+<Callout type="info" title="Accessibility Considerations">
+  - Announce route changes to screen readers - Ensure focus management during
+  navigation - Provide skip links for complex navigation - Use semantic HTML for
+  navigation elements - Maintain logical tab order during route changes
+</Callout>
+
+## Troubleshooting
+
+<Accordions>
+<Accordion title="URL updates not triggering re-renders">
+
+**Solution:** Ensure you're using the hook's navigation methods:
+
+```tsx
+// ❌ Wrong - won't trigger updates
+window.location.href = "/new-path";
+
+// ✅ Correct - triggers hook updates
+const { navigate } = useLocation();
+navigate("/new-path");
+```
+
+</Accordion>
+
+<Accordion title="History API not working in older browsers">
+
+**Solution:** Add polyfills or fallback behavior:
+
+```tsx
+const navigate = useCallback(
+  (url: string, replace: boolean = false) => {
+    if (window.history && window.history.pushState) {
+      if (replace) {
+        window.history.replaceState(null, "", url);
+      } else {
+        window.history.pushState(null, "", url);
+      }
+      updateLocation();
+    } else {
+      // Fallback for older browsers
+      window.location.href = url;
+    }
+  },
+  [updateLocation]
+);
+```
+
+</Accordion>
+
+<Accordion title="Memory leaks with event listeners">
+
+**Solution:** Ensure proper cleanup in the useEffect:
+
+```tsx
+useEffect(() => {
+  const handleLocationChange = () => updateLocation();
+
+  window.addEventListener("popstate", handleLocationChange);
+  window.addEventListener("hashchange", handleLocationChange);
+
+  return () => {
+    window.removeEventListener("popstate", handleLocationChange);
+    window.removeEventListener("hashchange", handleLocationChange);
+  };
+}, [updateLocation]);
+```
+
+</Accordion>
+
+<Accordion title="Search parameters not updating properly">
+
+**Solution:** Use proper URLSearchParams methods:
+
+```tsx
+const setSearchParam = useCallback(
+  (key: string, value: string) => {
+    const newSearchParams = new URLSearchParams(window.location.search);
+
+    if (value && value.trim()) {
+      newSearchParams.set(key, value);
+    } else {
+      newSearchParams.delete(key);
+    }
+
+    const search = newSearchParams.toString();
+    const newUrl = `${window.location.pathname}${search ? `?${search}` : ""}${
+      window.location.hash
+    }`;
+    navigate(newUrl, true);
+  },
+  [navigate]
+);
+```
+
+</Accordion>
+</Accordions>
+
+## Internals
+
+<Callout type="info" title="How It Works">
+The hook maintains synchronized state with the browser's location object by listening to `popstate`, `hashchange`, and custom history events. It provides a reactive interface to the History API while maintaining compatibility with browser navigation controls.
+
+The implementation intercepts `pushState` and `replaceState` calls to ensure all location changes trigger React re-renders.
+
+</Callout>
+
+## Testing Example
+
+```ts
+import { renderHook, act } from "@testing-library/react";
+import { useLocation } from "./useLocation";
+
+// Mock window.location and history
+const mockLocation = {
+  pathname: "/test",
+  search: "?foo=bar",
+  hash: "#section",
+  host: "example.com",
+  hostname: "example.com",
+  origin: "https://example.com",
+  port: "",
+  protocol: "https:",
+  href: "https://example.com/test?foo=bar#section",
+};
+
+Object.defineProperty(window, "location", {
+  value: mockLocation,
+  writable: true,
+});
+
+const mockHistory = {
+  pushState: jest.fn(),
+  replaceState: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+};
+
+Object.defineProperty(window, "history", {
+  value: mockHistory,
+  writable: true,
+});
+
+describe("useLocation", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should return current location state", () => {
+    const { result } = renderHook(() => useLocation());
+
+    expect(result.current.location.pathname).toBe("/test");
+    expect(result.current.location.search).toBe("?foo=bar");
+    expect(result.current.location.hash).toBe("#section");
+    expect(result.current.searchParams.get("foo")).toBe("bar");
+  });
+
+  it("should navigate to new URL", () => {
+    const { result } = renderHook(() => useLocation());
+
+    act(() => {
+      result.current.navigate("/new-path");
+    });
+
+    expect(mockHistory.pushState).toHaveBeenCalledWith(null, "", "/new-path");
+  });
+
+  it("should replace current URL", () => {
+    const { result } = renderHook(() => useLocation());
+
+    act(() => {
+      result.current.navigate("/new-path", true);
+    });
+
+    expect(mockHistory.replaceState).toHaveBeenCalledWith(
+      null,
+      "",
+      "/new-path"
+    );
+  });
+
+  it("should set search parameters", () => {
+    const { result } = renderHook(() => useLocation());
+
+    act(() => {
+      result.current.setSearchParam("test", "value");
+    });
+
+    expect(mockHistory.replaceState).toHaveBeenCalledWith(
+      null,
+      "",
+      expect.stringContaining("test=value")
+    );
+  });
+
+  it("should remove search parameters", () => {
+    const { result } = renderHook(() => useLocation());
+
+    act(() => {
+      result.current.removeSearchParam("foo");
+    });
+
+    expect(mockHistory.replaceState).toHaveBeenCalledWith(
+      null,
+      "",
+      expect.not.stringContaining("foo=bar")
+    );
+  });
+
+  it("should handle browser navigation", () => {
+    const { result } = renderHook(() => useLocation());
+
+    act(() => {
+      result.current.back();
+    });
+
+    expect(mockHistory.back).toHaveBeenCalled();
+
+    act(() => {
+      result.current.forward();
+    });
+
+    expect(mockHistory.forward).toHaveBeenCalled();
+  });
+});
+```
+
+## FAQ
+
+<Accordions>
+<Accordion title="How does this differ from React Router?">
+
+This hook provides low-level location management without routing logic. React Router includes route matching, component rendering, and navigation guards. Use this hook for simple navigation needs or when building custom routing solutions.
+
+</Accordion>
+
+<Accordion title="Can I use this with Next.js or other frameworks?">
+
+Yes, but be aware that this hook works with browser navigation only. For Next.js, consider using their built-in router for SSR compatibility:
+
+```tsx
+// For client-side only features
+const { searchParams, setSearchParam } = useLocation();
+
+// For Next.js routing
+import { useRouter } from "next/router";
+```
+
+</Accordion>
+
+<Accordion title="How do I handle route authentication?">
+
+Combine this hook with authentication state:
+
+```tsx
+const { location, navigate } = useLocation();
+const { user, isAuthenticated } = useAuth();
+
+useEffect(() => {
+  const protectedRoutes = ["/dashboard", "/profile"];
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
+  if (isProtectedRoute && !isAuthenticated) {
+    navigate("/login");
+  }
+}, [location.pathname, isAuthenticated, navigate]);
+```
+
+</Accordion>
+
+<Accordion title="Can I persist URL state in localStorage?">
+
+Yes, you can sync URL parameters with localStorage:
+
+```tsx
+const { searchParams, setSearchParam } = useLocation();
+
+// Save important parameters to localStorage
+useEffect(() => {
+  const preferences = {
+    theme: searchParams.get("theme"),
+    language: searchParams.get("lang"),
+  };
+
+  localStorage.setItem("userPreferences", JSON.stringify(preferences));
+}, [searchParams]);
+
+// Restore from localStorage on app load
+useEffect(() => {
+  const saved = localStorage.getItem("userPreferences");
+  if (saved) {
+    const preferences = JSON.parse(saved);
+    if (preferences.theme) setSearchParam("theme", preferences.theme);
+    if (preferences.language) setSearchParam("lang", preferences.language);
+  }
+}, []);
+```
+
+</Accordion>
+</Accordions>
+
+## Related Hooks
+
+- [useClipboard](../useClipboard) - Copy current URL for sharing
+- [usePrevious](../usePrevious) - Track previous location state
+- [useLocalStorage](../useLocalStorage) - Persist navigation preferences
+
+## Changelog
+
+- **2.0.0** — Enhanced TypeScript support, improved search parameter handling, better browser compatibility, comprehensive navigation methods
+- **1.3.0** — Added hash management and search parameter utilities
+- **1.2.0** — Improved history API integration and event handling
+- **1.1.0** — Added navigation methods (back, forward, reload)
+- **1.0.0** — Initial release with basic location tracking
