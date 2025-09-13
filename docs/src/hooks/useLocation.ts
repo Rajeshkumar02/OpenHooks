@@ -26,23 +26,43 @@ interface UseLocationReturn {
 }
 
 export function useLocation(): UseLocationReturn {
-  const [location, setLocation] = useState<LocationState>(() => ({
-    pathname: window.location.pathname,
-    search: window.location.search,
-    hash: window.location.hash,
-    host: window.location.host,
-    hostname: window.location.hostname,
-    origin: window.location.origin,
-    port: window.location.port,
-    protocol: window.location.protocol,
-    href: window.location.href,
-  }));
+  const [location, setLocation] = useState<LocationState>(() => {
+    if (typeof window === "undefined") {
+      return {
+        pathname: "",
+        search: "",
+        hash: "",
+        host: "",
+        hostname: "",
+        origin: "",
+        port: "",
+        protocol: "",
+        href: "",
+      };
+    }
+    return {
+      pathname: window.location.pathname,
+      search: window.location.search,
+      hash: window.location.hash,
+      host: window.location.host,
+      hostname: window.location.hostname,
+      origin: window.location.origin,
+      port: window.location.port,
+      protocol: window.location.protocol,
+      href: window.location.href,
+    };
+  });
 
-  const [searchParams, setSearchParams] = useState<URLSearchParams>(
-    () => new URLSearchParams(window.location.search)
-  );
+  const [searchParams, setSearchParams] = useState<URLSearchParams>(() => {
+    if (typeof window === "undefined") {
+      return new URLSearchParams();
+    }
+    return new URLSearchParams(window.location.search);
+  });
 
   const updateLocation = useCallback(() => {
+    if (typeof window === "undefined") return;
+
     const newLocation: LocationState = {
       pathname: window.location.pathname,
       search: window.location.search,
@@ -60,6 +80,8 @@ export function useLocation(): UseLocationReturn {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleLocationChange = () => {
       updateLocation();
     };
@@ -94,6 +116,8 @@ export function useLocation(): UseLocationReturn {
 
   const navigate = useCallback(
     (url: string, replace: boolean = false) => {
+      if (typeof window === "undefined") return;
+
       if (replace) {
         window.history.replaceState(null, "", url);
       } else {
@@ -105,14 +129,17 @@ export function useLocation(): UseLocationReturn {
   );
 
   const back = useCallback(() => {
+    if (typeof window === "undefined") return;
     window.history.back();
   }, []);
 
   const forward = useCallback(() => {
+    if (typeof window === "undefined") return;
     window.history.forward();
   }, []);
 
   const reload = useCallback((forceReload: boolean = false) => {
+    if (typeof window === "undefined") return;
     if (forceReload) {
       window.location.reload();
     } else {
@@ -122,6 +149,8 @@ export function useLocation(): UseLocationReturn {
 
   const setSearchParam = useCallback(
     (key: string, value: string) => {
+      if (typeof window === "undefined") return;
+
       const newSearchParams = new URLSearchParams(window.location.search);
       newSearchParams.set(key, value);
       const newUrl = `${
@@ -134,6 +163,8 @@ export function useLocation(): UseLocationReturn {
 
   const removeSearchParam = useCallback(
     (key: string) => {
+      if (typeof window === "undefined") return;
+
       const newSearchParams = new URLSearchParams(window.location.search);
       newSearchParams.delete(key);
       const search = newSearchParams.toString();
@@ -147,6 +178,8 @@ export function useLocation(): UseLocationReturn {
 
   const setHash = useCallback(
     (hash: string) => {
+      if (typeof window === "undefined") return;
+
       const newHash = hash.startsWith("#") ? hash : `#${hash}`;
       const newUrl = `${window.location.pathname}${window.location.search}${newHash}`;
       navigate(newUrl, true);

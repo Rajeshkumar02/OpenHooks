@@ -23,9 +23,7 @@ export default function CodePreview({
   title,
   files,
   preview,
-  showCopy = true,
   showExpand = false,
-  defaultTab,
 }: CodePreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 

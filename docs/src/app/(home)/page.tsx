@@ -8,7 +8,6 @@ import {
   Package,
   Sparkles,
   Shield,
-  Clock,
   Users,
   Target,
   Rocket,
@@ -20,7 +19,6 @@ import {
   Play,
   Copy,
   CheckCircle,
-  Workflow,
   Palette,
 } from "lucide-react";
 import Link from "next/link";

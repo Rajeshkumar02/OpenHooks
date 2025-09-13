@@ -11,9 +11,15 @@ import {
   type DebounceOptions,
 } from "@/hooks/useDebounce";
 
+interface User {
+  id: number;
+  username: string;
+  email: string;
+}
+
 export default function DebounceAxiosExample() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Debounce config
@@ -74,10 +80,10 @@ export default function DebounceAxiosExample() {
         {!isLoading &&
           results.length > 0 &&
           results?.map((item) => (
-            <li key={item?.id}>
+            <li key={item.id}>
               <div className="text-sm font-medium">
-                <div>Name: {item?.username}</div>
-                <div>Email: {item?.email}</div>
+                <div>Name: {item.username}</div>
+                <div>Email: {item.email}</div>
               </div>
             </li>
           ))}
